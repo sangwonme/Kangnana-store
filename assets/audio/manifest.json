@@ -1,0 +1,351 @@
+[
+  {
+    "id": "amb_fridge_hum",
+    "file": "amb_fridge_hum.mp3",
+    "kind": "loop",
+    "duration_s": 19.94,
+    "description": "Commercial fridge/compressor hum in a small kitchen (seamless loop)"
+  },
+  {
+    "id": "amb_fluorescent",
+    "file": "amb_fluorescent.mp3",
+    "kind": "loop",
+    "duration_s": 19.94,
+    "description": "Subtle fluorescent tube buzz (seamless loop)"
+  },
+  {
+    "id": "amb_street_night",
+    "file": "amb_street_night.mp3",
+    "kind": "loop",
+    "duration_s": 19.94,
+    "description": "Very faint distant city night heard from inside a closed shop (seamless loop)"
+  },
+  {
+    "id": "sizzle_loop",
+    "file": "sizzle_loop.mp3",
+    "kind": "loop",
+    "duration_s": 14.44,
+    "description": "Griddle sizzle, meat/onions on a flat-top (seamless loop)"
+  },
+  {
+    "id": "heartbeat_loop",
+    "file": "heartbeat_loop.mp3",
+    "kind": "loop",
+    "duration_s": 17.99,
+    "description": "Slow tense heartbeat, deep muffled thumps (seamless loop, cut on beat boundaries)"
+  },
+  {
+    "id": "door_bell",
+    "file": "door_bell.mp3",
+    "kind": "sfx",
+    "duration_s": 2.42,
+    "description": "Small brass shop door bell jingling as the glass door opens"
+  },
+  {
+    "id": "door_open",
+    "file": "door_open.mp3",
+    "kind": "sfx",
+    "duration_s": 1.99,
+    "description": "Glass shop door with metal frame opening (no bell)"
+  },
+  {
+    "id": "door_close",
+    "file": "door_close.mp3",
+    "kind": "sfx",
+    "duration_s": 1.56,
+    "description": "Glass shop door with metal frame swinging shut (no bell)"
+  },
+  {
+    "id": "footstep_tile_1",
+    "file": "footstep_tile_1.mp3",
+    "kind": "sfx",
+    "duration_s": 0.49,
+    "description": "Sneaker footstep on hard kitchen/restaurant floor, variation 1"
+  },
+  {
+    "id": "footstep_tile_2",
+    "file": "footstep_tile_2.mp3",
+    "kind": "sfx",
+    "duration_s": 0.36,
+    "description": "Sneaker footstep on hard kitchen/restaurant floor, variation 2"
+  },
+  {
+    "id": "footstep_tile_3",
+    "file": "footstep_tile_3.mp3",
+    "kind": "sfx",
+    "duration_s": 0.37,
+    "description": "Sneaker footstep on hard kitchen/restaurant floor, variation 3"
+  },
+  {
+    "id": "footstep_tile_4",
+    "file": "footstep_tile_4.mp3",
+    "kind": "sfx",
+    "duration_s": 0.46,
+    "description": "Sneaker footstep on hard kitchen/restaurant floor, variation 4"
+  },
+  {
+    "id": "switch_click",
+    "file": "switch_click.mp3",
+    "kind": "sfx",
+    "duration_s": 0.17,
+    "description": "Wall light switch click"
+  },
+  {
+    "id": "printer_receipt",
+    "file": "printer_receipt.mp3",
+    "kind": "sfx",
+    "duration_s": 2.94,
+    "description": "Thermal receipt printer printing a ticket and cutting"
+  },
+  {
+    "id": "ui_start",
+    "file": "ui_start.mp3",
+    "kind": "sfx",
+    "duration_s": 2.79,
+    "description": "Subtle low eerie tone for pressing Start"
+  },
+  {
+    "id": "torch_ignite",
+    "file": "torch_ignite.mp3",
+    "kind": "sfx",
+    "duration_s": 3.0,
+    "description": "Kitchen butane torch ignition click + short flame"
+  },
+  {
+    "id": "jumpscare_sting",
+    "file": "jumpscare_sting.mp3",
+    "kind": "sfx",
+    "duration_s": 2.06,
+    "description": "Harsh horror sting: distorted noise burst + deep impact"
+  },
+  {
+    "id": "dongwoo_01",
+    "file": "dongwoo_01.mp3",
+    "kind": "voice",
+    "duration_s": 1.37,
+    "text": "어, 왔어?",
+    "description": "동우: greeting the new part-timer"
+  },
+  {
+    "id": "dongwoo_01_b",
+    "file": "dongwoo_01_b.mp3",
+    "kind": "voice",
+    "duration_s": 1.44,
+    "text": "어, 왔어?",
+    "description": "동우: greeting the new part-timer (alternate take)"
+  },
+  {
+    "id": "dongwoo_02",
+    "file": "dongwoo_02.mp3",
+    "kind": "voice",
+    "duration_s": 1.7,
+    "text": "주문만 잘 쳐내면 돼.",
+    "description": "동우: quick instruction, in a hurry"
+  },
+  {
+    "id": "dongwoo_02_b",
+    "file": "dongwoo_02_b.mp3",
+    "kind": "voice",
+    "duration_s": 2.48,
+    "text": "주문만 잘 쳐내면 돼.",
+    "description": "동우: quick instruction, in a hurry (alternate take)"
+  },
+  {
+    "id": "dongwoo_03",
+    "file": "dongwoo_03.mp3",
+    "kind": "voice",
+    "duration_s": 2.31,
+    "text": "난 어디 급한 일이 있어서...",
+    "description": "동우: evasive excuse, trailing off while glancing away"
+  },
+  {
+    "id": "dongwoo_03_b",
+    "file": "dongwoo_03_b.mp3",
+    "kind": "voice",
+    "duration_s": 2.85,
+    "text": "난 어디 급한 일이 있어서...",
+    "description": "동우: evasive excuse, trailing off while glancing away (alternate take)"
+  },
+  {
+    "id": "paper_rustle",
+    "file": "paper_rustle.mp3",
+    "kind": "sfx",
+    "duration_s": 0.93,
+    "description": "Picking up and unfolding a paper slip to read it"
+  },
+  {
+    "id": "blender",
+    "file": "blender.mp3",
+    "kind": "sfx",
+    "duration_s": 1.85,
+    "description": "Commercial blender running ~1.5 s then stopping"
+  },
+  {
+    "id": "service_bell",
+    "file": "service_bell.mp3",
+    "kind": "sfx",
+    "duration_s": 1.48,
+    "description": "Kitchen pickup counter service bell, single ding"
+  },
+  {
+    "id": "wrong_buzz",
+    "file": "wrong_buzz.mp3",
+    "kind": "sfx",
+    "duration_s": 0.84,
+    "description": "Low dull failure tone for a mistake (game UI, not cartoony)"
+  },
+  {
+    "id": "costume_breath_loop",
+    "file": "costume_breath_loop.mp3",
+    "kind": "loop",
+    "duration_s": 12.92,
+    "description": "Own slow, stifled breathing heard from inside a thick fabric mascot hood (seamless loop)"
+  },
+  {
+    "id": "paper_tear",
+    "file": "paper_tear.mp3",
+    "kind": "sfx",
+    "duration_s": 0.89,
+    "description": "Tearing a thermal receipt off the printer's serrated edge"
+  },
+  {
+    "id": "squeeze",
+    "file": "squeeze.mp3",
+    "kind": "sfx",
+    "duration_s": 0.39,
+    "description": "Squeezing a plastic sauce squeeze bottle"
+  },
+  {
+    "id": "box_close",
+    "file": "box_close.mp3",
+    "kind": "sfx",
+    "duration_s": 0.36,
+    "description": "Closing the lid of a paper/cardboard taco box"
+  },
+  {
+    "id": "food_plop",
+    "file": "food_plop.mp3",
+    "kind": "sfx",
+    "duration_s": 0.32,
+    "description": "Dropping meat/cheese onto a tortilla on a cutting board"
+  },
+  {
+    "id": "scooter_arrive",
+    "file": "scooter_arrive.mp3",
+    "kind": "sfx",
+    "duration_s": 3.46,
+    "description": "Delivery scooter pulling up and stopping outside the shop, heard through the glass door"
+  },
+  {
+    "id": "scooter_leave",
+    "file": "scooter_leave.mp3",
+    "kind": "sfx",
+    "duration_s": 3.42,
+    "description": "Delivery scooter starting off and riding away, heard through the glass door"
+  },
+  {
+    "id": "plastic_bag",
+    "file": "plastic_bag.mp3",
+    "kind": "sfx",
+    "duration_s": 0.85,
+    "description": "Picking up a delivery plastic/paper bag"
+  },
+  {
+    "id": "fabric_on",
+    "file": "fabric_on.mp3",
+    "kind": "sfx",
+    "duration_s": 1.12,
+    "description": "Pulling a thick mascot-costume hood over the head (cloth, muffled)"
+  },
+  {
+    "id": "fabric_off",
+    "file": "fabric_off.mp3",
+    "kind": "sfx",
+    "duration_s": 1.13,
+    "description": "Pulling the mascot-costume hood off the head (cloth)"
+  },
+  {
+    "id": "pen_write",
+    "file": "pen_write.mp3",
+    "kind": "sfx",
+    "duration_s": 1.08,
+    "description": "Ballpoint pen quickly scribbling a name on the back of a receipt"
+  },
+  {
+    "id": "power_off",
+    "file": "power_off.mp3",
+    "kind": "sfx",
+    "duration_s": 2.35,
+    "description": "Power cut: breaker clunk, then fridge hum and fluorescent buzz winding down to silence"
+  },
+  {
+    "id": "printer_loop",
+    "file": "printer_loop.mp3",
+    "kind": "loop",
+    "duration_s": 8.44,
+    "description": "Receipt printer printing continuously without stopping (seamless loop)"
+  },
+  {
+    "id": "dread_hit",
+    "file": "dread_hit.mp3",
+    "kind": "sfx",
+    "duration_s": 2.21,
+    "description": "Low cinematic boom with a short dissonant tail (weaker than jumpscare_sting)"
+  },
+  {
+    "id": "breath_close",
+    "file": "breath_close.mp3",
+    "kind": "sfx",
+    "duration_s": 3.39,
+    "description": "One heavy slow breath (in + out) right behind the ear, muffled by costume fabric"
+  },
+  {
+    "id": "banana_rain",
+    "file": "banana_rain.mp3",
+    "kind": "sfx",
+    "duration_s": 3.66,
+    "description": "Dozens of bananas pouring from the ceiling onto the tile floor: a few, then a torrent, then a few rolling"
+  },
+  {
+    "id": "banana_pick",
+    "file": "banana_pick.mp3",
+    "kind": "sfx",
+    "duration_s": 0.6,
+    "description": "Picking a single banana up off the floor"
+  },
+  {
+    "id": "basket_place",
+    "file": "basket_place.mp3",
+    "kind": "sfx",
+    "duration_s": 0.94,
+    "description": "Setting a rattan basket full of bananas down on the counter"
+  },
+  {
+    "id": "tv_on",
+    "file": "tv_on.mp3",
+    "kind": "sfx",
+    "duration_s": 1.47,
+    "description": "Old CRT TV switching on: click + high-pitched whine + short static"
+  },
+  {
+    "id": "tv_static",
+    "file": "tv_static.mp3",
+    "kind": "loop",
+    "duration_s": 4.44,
+    "description": "Old CRT TV white-noise static (seamless loop)"
+  },
+  {
+    "id": "tv_pop",
+    "file": "tv_pop.mp3",
+    "kind": "sfx",
+    "duration_s": 2.02,
+    "description": "CRT TV blowing out: pop + cracking glass + electrical sizzle tail"
+  },
+  {
+    "id": "glass_bang",
+    "file": "glass_bang.mp3",
+    "kind": "sfx",
+    "duration_s": 2.27,
+    "description": "Two heavy palm slams on the big shop-front window from outside: dull glass boom + rattling frame"
+  }
+]

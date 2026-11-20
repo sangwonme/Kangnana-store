@@ -1,0 +1,4 @@
+﻿# never publish secrets
+.env
+.env.*
+*.key
