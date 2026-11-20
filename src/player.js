@@ -21,16 +21,23 @@ export class Player {
     this.onStep = null;
     this.lastLook = 0;
     this.locks = new Set(); // reader / choice / timed actions freeze the player
+    this.joy = new THREE.Vector2(); // mobile joystick, -1..1 (y down = backward)
 
     addEventListener('keydown', (e) => { if (!(e.target instanceof HTMLInputElement)) this.keys.add(e.code); });
     addEventListener('keyup', (e) => this.keys.delete(e.code));
     addEventListener('blur', () => this.keys.clear());
     addEventListener('mousemove', (e) => {
-      if (document.pointerLockElement !== this.dom || !this.canLook || this.locks.size) return;
-      this.lastLook = performance.now();
-      this.yaw -= e.movementX * 0.0022;
-      this.pitch = THREE.MathUtils.clamp(this.pitch - e.movementY * 0.0022, -1.35, 1.35);
+      if (document.pointerLockElement !== this.dom) return;
+      this.lookBy(e.movementX, e.movementY);
     });
+  }
+
+  /** Rotate the view by a pixel delta (mouse or touch drag). */
+  lookBy(dx, dy) {
+    if (!this.canLook || this.locks.size) return;
+    this.lastLook = performance.now();
+    this.yaw -= dx * 0.0022;
+    this.pitch = THREE.MathUtils.clamp(this.pitch - dy * 0.0022, -1.35, 1.35);
   }
 
   place(position, lookAt) {
@@ -82,9 +89,12 @@ export class Player {
     if (this.canMove && !this.locks.size) {
       const f = (this.keys.has('KeyW') || this.keys.has('ArrowUp') ? 1 : 0) - (this.keys.has('KeyS') || this.keys.has('ArrowDown') ? 1 : 0);
       const s = (this.keys.has('KeyD') || this.keys.has('ArrowRight') ? 1 : 0) - (this.keys.has('KeyA') || this.keys.has('ArrowLeft') ? 1 : 0);
-      if (f || s) {
+      const jf = -this.joy.y, js = this.joy.x;
+      const F = THREE.MathUtils.clamp(f + jf, -1, 1), S = THREE.MathUtils.clamp(s + js, -1, 1);
+      if (Math.hypot(F, S) > 0.15) {
         const sin = Math.sin(this.yaw), cos = Math.cos(this.yaw);
-        const v = new THREE.Vector3(-sin * f + cos * s, 0, -cos * f - sin * s).normalize().multiplyScalar(SPEED * dt);
+        const mag = Math.min(1, Math.hypot(F, S));
+        const v = new THREE.Vector3(-sin * F + cos * S, 0, -cos * F - sin * S).normalize().multiplyScalar(SPEED * dt * mag);
         const before = this.pos.clone();
         this.pos.add(v);
         this.collide(this.pos);

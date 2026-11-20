@@ -380,7 +380,7 @@ export class Cooking {
     $('costume-hint').hidden = false;
     this.g.sound.loop('costume_breath_loop', 0.35);
     this.g.sound.fadeLoop('costume_breath_loop', 0.35, 0.5);
-    this.toast('바나나탈을 썼다… 앞이 잘 안 보인다 (Q: 벗기)');
+    this.toast(`바나나탈을 썼다… 앞이 잘 안 보인다 (${document.body.classList.contains('touch') ? '탭해서' : 'Q:'} 벗기)`);
   }
 
   takeOffCostume() {

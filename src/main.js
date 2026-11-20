@@ -14,6 +14,7 @@ import { Delivery } from './delivery.js';
 import { runFlow } from './flow.js';
 import { Debug } from './debug.js';
 import { TitleScene } from './title.js';
+import { isTouch, setupTouch, goFullscreen } from './touch.js';
 
 const params = new URLSearchParams(location.search);
 const $ = (id) => document.getElementById(id);
@@ -123,12 +124,30 @@ cooking.onServed = (t, pack) => delivery.request(pack, !!t.anomalyRider);
 cooking.onCostumeOff = () => events.costumeReaction();
 const debug = new Debug(game);
 game.debug = debug;
-addEventListener('keydown', (e) => {
-  if (e.code !== 'KeyE' || e.repeat || !game.started || game.paused || e.target instanceof HTMLInputElement) return;
+/** The E key / mobile action button. */
+function action() {
+  if (!game.started || game.paused || cooking.naming) return;
   if (game.shiftMinutes === null) return; // not during the opening cutscene
   if (reader.open) reader.close();
   else interact.use();
+}
+addEventListener('keydown', (e) => {
+  if (e.code === 'KeyE' && !e.repeat && !(e.target instanceof HTMLInputElement)) action();
 });
+$('name-ok').addEventListener('click', () =>
+  $('name-input').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })));
+const syncTouch = isTouch
+  ? setupTouch(game, { action, actionLabel: () => (reader.open ? '닫기' : interact.target?.label() ?? null) })
+  : null;
+if (isTouch) {
+  // phones have no pointer lock: pause when the app goes to the background
+  document.addEventListener('visibilitychange', () => {
+    if (!game.started || cooking.ended || !document.hidden) return;
+    game.paused = true;
+    $('paused').hidden = false;
+    game.sound.listener.context.suspend();
+  });
+}
 loading.disabled = false;
 loading.textContent = '시작하기';
 
@@ -145,7 +164,10 @@ function begin() {
   game.sound.loop('amb_fridge_hum', 0.35);
   game.sound.loop('amb_fluorescent', 0.18);
   game.sound.loop('amb_street_night', 0.15);
-  if (!params.has('autostart')) canvas.requestPointerLock();
+  if (!params.has('autostart')) {
+    goFullscreen();
+    if (!isTouch) canvas.requestPointerLock();
+  }
   if (params.has('skip')) {
     dongwoo.root.visible = false;
     game.player.canMove = true;
@@ -156,6 +178,7 @@ function begin() {
 }
 $('start').addEventListener('click', begin);
 canvas.addEventListener('click', () => {
+  if (isTouch) return;
   if (reader.open) { reader.close(); return; } // while pointer-locked, clicks land on the canvas
   if (game.started && document.pointerLockElement !== canvas) canvas.requestPointerLock();
 });
@@ -166,7 +189,13 @@ document.addEventListener('pointerlockchange', () => {
   $('paused').hidden = !game.paused;
   game.sound.listener.context[game.paused ? 'suspend' : 'resume']();
 });
-$('paused').addEventListener('click', () => canvas.requestPointerLock());
+$('paused').addEventListener('click', () => {
+  goFullscreen();
+  if (!isTouch) { canvas.requestPointerLock(); return; }
+  game.paused = false;
+  $('paused').hidden = true;
+  game.sound.listener.context.resume();
+});
 
 // ---------- loop ----------
 const clock = new THREE.Clock();
@@ -213,6 +242,7 @@ function frame() {
       $('clock').textContent = `:`;
     }
     if (debug.open) debug.state();
+    syncTouch?.();
   }
   const fade = post.uniforms.fade;
   fade.value += Math.sign(game.fadeTarget - fade.value) * Math.min(Math.abs(game.fadeTarget - fade.value), dt / 2.2);
