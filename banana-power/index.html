@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="빠나나 빠워!">
+<meta name="theme-color" content="#8fd0ff">
+<title>빠나나 빠워!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <div id="sky"></div>
+  <canvas id="view"></canvas>
+  <div id="speed" hidden></div>
+
+  <div id="hud" hidden>
+    <div id="score">0</div>
+    <div id="timer"><div id="timer-fill"></div></div>
+    <div id="gauge" title="바나나 게이지">
+      <span class="g-icon">🍌</span>
+      <div id="gauge-slots"></div>
+    </div>
+  </div>
+  <button id="mute" aria-label="소리 끄기">🔊</button>
+
+  <div id="banner" hidden>빠나나 빠워!</div>
+  <div id="pops"></div>
+
+  <div id="controls" hidden>
+    <button class="ctl" id="btn-left" aria-label="왼쪽">◀</button>
+    <button class="ctl" id="btn-right" aria-label="오른쪽">▶</button>
+  </div>
+
+  <div id="title" class="overlay">
+    <div class="top">
+      <h1>빠나나<br>빠워!</h1>
+      <p class="sub">계단을 오르고 바나나를 모아<br>강나나로 변신하자!</p>
+    </div>
+    <div class="bottom">
+      <button id="start" class="big" disabled>불러오는 중…</button>
+      <p class="best">최고 기록 <b id="best-title">0</b></p>
+      <p class="howto"><span class="kb">← → 키</span><span class="tc">화면 왼쪽·오른쪽 탭</span>으로 계단 방향 고르기</p>
+    </div>
+  </div>
+
+  <div id="over" class="overlay" hidden>
+    <h2>꽈당!</h2>
+    <p class="final"><b id="final">0</b><span>계단</span></p>
+    <p id="newbest" hidden>🎉 최고 기록!</p>
+    <p class="best">최고 기록 <b id="best-over">0</b></p>
+    <button id="retry" class="big">다시 오르기</button>
+    <a class="home" href="../">다른 게임</a>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
