@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="강나나의 멋진 포즈!">
+<meta name="theme-color" content="#0b0c09">
+<title>강나나의 멋진 포즈!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="view"></canvas>
+  <div id="grain"></div>
+  <div id="flash"></div>
+
+  <div id="hud" hidden>
+    <div id="score">000</div>
+    <div id="best">최고 0</div>
+  </div>
+  <div id="corner">
+    <button id="mute" aria-label="소리">🔊</button>
+    <button id="pause" aria-label="일시정지" hidden>❚❚</button>
+  </div>
+
+  <div id="level" hidden></div>
+  <div id="stamp" hidden></div>
+  <div id="panel" hidden></div>
+
+  <div id="title" class="overlay">
+    <div class="top">
+      <p class="kicker">지하 3층 · 생존 오디션</p>
+      <h1>강나나의<br>멋진 포즈!</h1>
+    </div>
+    <div class="bottom">
+      <p class="rule">다가오는 벽의 구멍에 맞춰 포즈를 바꿔라.<br>못 맞추면… <b>끝</b>.</p>
+      <div id="modes"><p class="best-line">불러오는 중…</p></div>
+    </div>
+  </div>
+
+  <div id="over" class="overlay" hidden>
+    <p class="kicker">참가자 탈락 · <span id="over-mode"></span></p>
+    <p class="final"><b id="final">0</b><span>벽 통과</span></p>
+    <p id="newbest" hidden>최고 기록 갱신</p>
+    <p class="best-line">최고 기록 <b id="best-over">0</b></p>
+    <button id="retry" class="big">다시 입장</button>
+    <button id="menu" class="link">난이도 선택</button>
+    <a class="home" href="../">다른 게임</a>
+  </div>
+
+  <div id="paused" class="overlay" hidden>
+    <p class="kicker">일시정지</p>
+    <button id="resume" class="big">계속</button>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

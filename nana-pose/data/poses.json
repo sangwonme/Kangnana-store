@@ -1,0 +1,111 @@
+{
+  "_doc": "Pose library. cat: full|upper|lower|arm|leg|torso. Segments {a,f}: a 0=down, 90=out to the side, 180=up, negative=across the body; f=forward tilt (deg). 'arm'/'leg' keys apply to both sides (mirrored); armL/armR/legL/legR override. torso {lean (+ = character's left), bend, twist}; head {tilt, nod, turn}. dynamic: period (s), keys [{u 0..1, parts}], optional final key u=1, interp smooth|linear|step, speed, phase (0..1). full presets may reference {upper, lower} presets. Missing parts = neutral.",
+  "presets": [
+    { "id": "n_upper", "cat": "upper", "name": "차렷", "parts": {} },
+    { "id": "banzai", "cat": "upper", "name": "만세", "parts": { "arm": { "upper": { "a": 168 }, "lower": { "a": 176 } }, "head": { "nod": -12 } } },
+    { "id": "plane", "cat": "upper", "name": "비행기", "parts": { "arm": { "upper": { "a": 90 }, "lower": { "a": 92 } } } },
+    { "id": "flex", "cat": "upper", "name": "알통", "parts": { "arm": { "upper": { "a": 92 }, "lower": { "a": 178 } } } },
+    { "id": "hips", "cat": "upper", "name": "허리에 손", "parts": { "arm": { "upper": { "a": 50, "f": -10 }, "lower": { "a": -55, "f": 10 } } } },
+    { "id": "ask", "cat": "upper", "name": "질문 있어요", "parts": { "armL": { "upper": { "a": 172 }, "lower": { "a": 178 } }, "head": { "tilt": -8 } } },
+    { "id": "disco", "cat": "upper", "name": "디스코", "parts": { "armL": { "upper": { "a": 138 }, "lower": { "a": 145 } }, "armR": { "upper": { "a": 30 }, "lower": { "a": -12 } }, "torso": { "lean": -8 } } },
+    { "id": "shrug", "cat": "upper", "name": "으쓱", "parts": { "arm": { "upper": { "a": 40 }, "lower": { "a": 125 } }, "head": { "tilt": 12 } } },
+    { "id": "teapot", "cat": "upper", "name": "주전자", "parts": { "armL": { "upper": { "a": 50, "f": -10 }, "lower": { "a": -55, "f": 10 } }, "armR": { "upper": { "a": 110 }, "lower": { "a": 160 } }, "torso": { "lean": -12 } } },
+    { "id": "arch", "cat": "upper", "name": "옆구리 늘리기", "parts": { "torso": { "lean": 22 }, "armL": { "upper": { "a": 6 }, "lower": { "a": 4 } }, "armR": { "upper": { "a": 160 }, "lower": { "a": -130 } } } },
+    { "id": "flail_s", "cat": "upper", "name": "허우적", "parts": { "armL": { "upper": { "a": 150 }, "lower": { "a": 105 } }, "armR": { "upper": { "a": 60 }, "lower": { "a": 125 } }, "torso": { "lean": 6 } } },
+    { "id": "ring", "cat": "upper", "name": "발레 팔", "parts": { "arm": { "upper": { "a": 150 }, "lower": { "a": -140 } } } },
+
+    { "id": "d_flail", "cat": "upper", "kind": "dynamic", "name": "팔 허우적", "period": 1.0, "keys": [
+      { "u": 0, "parts": { "armL": { "upper": { "a": 160 }, "lower": { "a": 150 } }, "armR": { "upper": { "a": 25 }, "lower": { "a": 20 } } } },
+      { "u": 0.5, "parts": { "armL": { "upper": { "a": 25 }, "lower": { "a": 20 } }, "armR": { "upper": { "a": 160 }, "lower": { "a": 150 } } } } ] },
+    { "id": "d_flap", "cat": "upper", "kind": "dynamic", "name": "날갯짓", "period": 0.9, "keys": [
+      { "u": 0, "parts": { "arm": { "upper": { "a": 25 }, "lower": { "a": 20 } } } },
+      { "u": 0.5, "parts": { "arm": { "upper": { "a": 135 }, "lower": { "a": 145 } } } } ] },
+    { "id": "d_sway", "cat": "upper", "kind": "dynamic", "name": "몸통 흔들기", "period": 1.4, "keys": [
+      { "u": 0, "parts": { "torso": { "lean": 30 }, "arm": { "upper": { "a": 38 }, "lower": { "a": 30 } } } },
+      { "u": 0.5, "parts": { "torso": { "lean": -30 }, "arm": { "upper": { "a": 38 }, "lower": { "a": 30 } } } } ] },
+    { "id": "d_robot", "cat": "upper", "kind": "dynamic", "name": "로봇 고장", "period": 1.2, "interp": "step", "keys": [
+      { "u": 0, "parts": { "armL": { "upper": { "a": 90 }, "lower": { "a": 180 } }, "armR": { "upper": { "a": 90 }, "lower": { "a": 90 } } } },
+      { "u": 0.25, "parts": { "armL": { "upper": { "a": 90 }, "lower": { "a": 90 } }, "armR": { "upper": { "a": 90 }, "lower": { "a": 0 } } } },
+      { "u": 0.5, "parts": { "armL": { "upper": { "a": 90 }, "lower": { "a": 0 } }, "armR": { "upper": { "a": 90 }, "lower": { "a": 180 } } } },
+      { "u": 0.75, "parts": { "armL": { "upper": { "a": 90 }, "lower": { "a": 90 } }, "armR": { "upper": { "a": 90 }, "lower": { "a": 90 } } } } ] },
+    { "id": "d_mak", "cat": "upper", "kind": "dynamic", "name": "막춤", "period": 1.6, "keys": [
+      { "u": 0, "parts": { "armL": { "upper": { "a": 150 }, "lower": { "a": 160 } }, "armR": { "upper": { "a": 30 }, "lower": { "a": 20 } }, "torso": { "lean": 10 } } },
+      { "u": 0.33, "parts": { "armL": { "upper": { "a": 60 }, "lower": { "a": 150 } }, "armR": { "upper": { "a": 120 }, "lower": { "a": 60 } }, "torso": { "lean": -10 } } },
+      { "u": 0.66, "parts": { "armL": { "upper": { "a": 20 }, "lower": { "a": 40 } }, "armR": { "upper": { "a": 170 }, "lower": { "a": 170 } } } } ] },
+
+    { "id": "n_lower", "cat": "lower", "name": "기본", "parts": {} },
+    { "id": "wide", "cat": "lower", "name": "쩍벌", "parts": { "leg": { "upper": { "a": 26 }, "lower": { "a": 24 } } } },
+    { "id": "squat", "cat": "lower", "name": "엉거주춤", "parts": { "leg": { "upper": { "a": 42, "f": 35 }, "lower": { "a": 12, "f": -25 } } } },
+    { "id": "flamingo", "cat": "lower", "name": "플라밍고", "parts": { "legL": { "upper": { "a": 75, "f": 20 }, "lower": { "a": -5 } } } },
+    { "id": "cross", "cat": "lower", "name": "꼰 다리", "parts": { "leg": { "upper": { "a": -9 }, "lower": { "a": -14 } } } },
+    { "id": "kick", "cat": "lower", "name": "옆차기", "parts": { "legL": { "upper": { "a": 80 }, "lower": { "a": 84 } } } },
+    { "id": "ballet", "cat": "lower", "name": "발레 다리", "parts": { "legL": { "upper": { "a": 52 }, "lower": { "a": -35 } } } },
+    { "id": "lunge", "cat": "lower", "name": "런지", "parts": { "legR": { "upper": { "a": 42 }, "lower": { "a": 34 } }, "legL": { "upper": { "a": 4 }, "lower": { "a": 2 } } } },
+
+    { "id": "d_knees", "cat": "lower", "kind": "dynamic", "name": "무릎 들썩", "period": 0.8, "keys": [
+      { "u": 0, "parts": { "legL": { "upper": { "a": 55, "f": 40 }, "lower": { "a": 5, "f": -20 } } } },
+      { "u": 0.5, "parts": { "legR": { "upper": { "a": 55, "f": 40 }, "lower": { "a": 5, "f": -20 } } } } ] },
+    { "id": "d_kick", "cat": "lower", "kind": "dynamic", "name": "발차기", "period": 1.0, "keys": [
+      { "u": 0, "parts": {} },
+      { "u": 0.5, "parts": { "legL": { "upper": { "a": 80 }, "lower": { "a": 84 } } } } ] },
+    { "id": "d_flamingo", "cat": "lower", "kind": "dynamic", "name": "플라밍고 춤", "period": 1.2, "keys": [
+      { "u": 0, "parts": { "legL": { "upper": { "a": 75, "f": 20 }, "lower": { "a": -5 } } } },
+      { "u": 0.5, "parts": { "legR": { "upper": { "a": 75, "f": 20 }, "lower": { "a": -5 } } } } ] },
+    { "id": "d_jack", "cat": "lower", "kind": "dynamic", "name": "벌렸다 오므렸다", "period": 0.9, "keys": [
+      { "u": 0, "parts": {} },
+      { "u": 0.5, "parts": { "leg": { "upper": { "a": 26 }, "lower": { "a": 24 } } } } ] },
+
+    { "id": "n_arm", "cat": "arm", "name": "내림", "parts": {} },
+    { "id": "a_up", "cat": "arm", "name": "위로", "parts": { "arm": { "upper": { "a": 168 }, "lower": { "a": 176 } } } },
+    { "id": "a_side", "cat": "arm", "name": "옆으로", "parts": { "arm": { "upper": { "a": 90 }, "lower": { "a": 92 } } } },
+    { "id": "a_flex", "cat": "arm", "name": "꺾어 올림", "parts": { "arm": { "upper": { "a": 92 }, "lower": { "a": 178 } } } },
+    { "id": "a_drop", "cat": "arm", "name": "꺾어 내림", "parts": { "arm": { "upper": { "a": 92 }, "lower": { "a": 2 } } } },
+    { "id": "a_hip", "cat": "arm", "name": "허리", "parts": { "arm": { "upper": { "a": 50, "f": -10 }, "lower": { "a": -55, "f": 10 } } } },
+    { "id": "a_over", "cat": "arm", "name": "머리 위", "parts": { "arm": { "upper": { "a": 160 }, "lower": { "a": -130 } } } },
+    { "id": "d_wave", "cat": "arm", "kind": "dynamic", "name": "손 흔들기", "period": 0.7, "keys": [
+      { "u": 0, "parts": { "arm": { "upper": { "a": 150 }, "lower": { "a": 115 } } } },
+      { "u": 0.5, "parts": { "arm": { "upper": { "a": 150 }, "lower": { "a": 205 } } } } ] },
+    { "id": "d_wind", "cat": "arm", "kind": "dynamic", "name": "풍차", "period": 1.6, "interp": "linear", "keys": [
+      { "u": 0, "parts": { "arm": { "upper": { "a": 10 }, "lower": { "a": 10 } } } },
+      { "u": 0.25, "parts": { "arm": { "upper": { "a": 100 }, "lower": { "a": 100 } } } },
+      { "u": 0.5, "parts": { "arm": { "upper": { "a": 190 }, "lower": { "a": 190 } } } },
+      { "u": 0.75, "parts": { "arm": { "upper": { "a": 280 }, "lower": { "a": 280 } } } },
+      { "u": 1, "parts": { "arm": { "upper": { "a": 370 }, "lower": { "a": 370 } } } } ] },
+    { "id": "d_robo_arm", "cat": "arm", "kind": "dynamic", "name": "로봇팔", "period": 1.0, "interp": "step", "keys": [
+      { "u": 0, "parts": { "arm": { "upper": { "a": 92 }, "lower": { "a": 178 } } } },
+      { "u": 0.5, "parts": { "arm": { "upper": { "a": 92 }, "lower": { "a": 2 } } } } ] },
+
+    { "id": "n_leg", "cat": "leg", "name": "기본", "parts": {} },
+    { "id": "l_out", "cat": "leg", "name": "벌리기", "parts": { "leg": { "upper": { "a": 28 }, "lower": { "a": 26 } } } },
+    { "id": "l_kick", "cat": "leg", "name": "옆차기", "parts": { "leg": { "upper": { "a": 80 }, "lower": { "a": 84 } } } },
+    { "id": "l_knee", "cat": "leg", "name": "무릎 들기", "parts": { "leg": { "upper": { "a": 75, "f": 20 }, "lower": { "a": -5 } } } },
+    { "id": "l_cross", "cat": "leg", "name": "꼬기", "parts": { "leg": { "upper": { "a": -12 }, "lower": { "a": -18 } } } },
+    { "id": "l_bent", "cat": "leg", "name": "안짱다리", "parts": { "leg": { "upper": { "a": -16, "f": 15 }, "lower": { "a": 32, "f": -10 } } } },
+    { "id": "d_lkick", "cat": "leg", "kind": "dynamic", "name": "발차기", "period": 1.0, "keys": [
+      { "u": 0, "parts": {} },
+      { "u": 0.5, "parts": { "leg": { "upper": { "a": 80 }, "lower": { "a": 84 } } } } ] },
+    { "id": "d_lbounce", "cat": "leg", "kind": "dynamic", "name": "들썩", "period": 0.8, "keys": [
+      { "u": 0, "parts": {} },
+      { "u": 0.5, "parts": { "leg": { "upper": { "a": 60, "f": 40 }, "lower": { "a": 5, "f": -20 } } } } ] },
+
+    { "id": "n_torso", "cat": "torso", "name": "똑바로", "parts": {} },
+    { "id": "t_left", "cat": "torso", "name": "▶ 기울기", "parts": { "torso": { "lean": 36 } } },
+    { "id": "t_right", "cat": "torso", "name": "◀ 기울기", "parts": { "torso": { "lean": -36 } } },
+    { "id": "t_tilt", "cat": "torso", "name": "갸우뚱", "parts": { "torso": { "lean": 10 }, "head": { "tilt": 30 } } },
+    { "id": "d_tsway", "cat": "torso", "kind": "dynamic", "name": "흔들흔들", "period": 1.4, "keys": [
+      { "u": 0, "parts": { "torso": { "lean": 34 } } },
+      { "u": 0.5, "parts": { "torso": { "lean": -34 } } } ] },
+
+    { "id": "f_stand", "cat": "full", "name": "차렷", "upper": "n_upper", "lower": "n_lower" },
+    { "id": "f_banzai", "cat": "full", "name": "만세", "upper": "banzai", "lower": "n_lower" },
+    { "id": "f_flail", "cat": "full", "name": "허우적", "upper": "flail_s", "lower": "wide" },
+    { "id": "f_twist", "cat": "full", "name": "발 꼬인", "upper": "disco", "lower": "cross" },
+    { "id": "f_squat", "cat": "full", "name": "엉거주춤", "upper": "hips", "lower": "squat" },
+    { "id": "f_ballet", "cat": "full", "name": "이상한 발레", "upper": "ring", "lower": "ballet" },
+    { "id": "f_arch", "cat": "full", "name": "옆으로 젖힌", "upper": "arch", "lower": "wide" },
+    { "id": "f_plane", "cat": "full", "name": "비행기", "upper": "plane", "lower": "flamingo" },
+    { "id": "f_flex", "cat": "full", "name": "알통", "upper": "flex", "lower": "wide" },
+    { "id": "f_ask", "cat": "full", "name": "질문 있어요", "upper": "ask", "lower": "n_lower" },
+    { "id": "f_teapot", "cat": "full", "name": "주전자", "upper": "teapot", "lower": "kick" }
+  ]
+}

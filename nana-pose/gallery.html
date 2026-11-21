@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>포즈 갤러리</title>
+<style>
+  body { margin: 0; background: #16130f; color: #d8cfb8; font: 12px system-ui, sans-serif; padding: 12px; }
+  h2 { font-size: 14px; margin: 18px 0 6px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  figure { margin: 0; text-align: center; }
+  canvas { background: #2a251d; image-rendering: pixelated; width: 128px; height: 100px; display: block; }
+  figcaption { margin-top: 2px; }
+  .dyn canvas { outline: 1px solid #c9a227; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="out">loading…</div>
+<script type="module">
+// Every preset's silhouette (dynamic ones at 4 phases) — a quick visual check of the pose library on the current model.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { PoseLib } from './src/poses.js';
+import { Silhouette, MW, MH } from './src/silhouette.js';
+
+const MODEL = new URLSearchParams(location.search).get('model') || '../shared/assets/models/darknana.glb';
+const [gltf, json, rig] = await Promise.all([
+  new GLTFLoader().loadAsync(MODEL),
+  fetch('data/poses.json').then((r) => r.json()),
+  fetch('data/rig.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
+]);
+const renderer = new THREE.WebGLRenderer();
+const lib = new PoseLib(json);
+const sil = new Silhouette(renderer, gltf.scene, rig);
+const out = document.getElementById('out');
+out.textContent = '';
+
+function draw(mask) {
+  const c = document.createElement('canvas'); c.width = MW; c.height = MH;
+  const x = c.getContext('2d'); const img = x.createImageData(MW, MH);
+  for (let y = 0; y < MH; y++) for (let i = 0; i < MW; i++) {
+    const v = mask[(MH - 1 - y) * MW + i]; const o = (y * MW + i) * 4;
+    img.data[o] = img.data[o + 1] = img.data[o + 2] = v ? 235 : 42; img.data[o + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  return c;
+}
+
+const slotOf = { full: 'full', upper: 'upper', lower: 'lower', arm: 'armL', leg: 'legL', torso: 'torso' };
+for (const [cat, list] of Object.entries(lib.cat)) {
+  const h = document.createElement('h2'); h.textContent = `${cat} (${list.length})`; out.appendChild(h);
+  const g = document.createElement('div'); g.className = 'grid'; out.appendChild(g);
+  for (const p of list) {
+    const times = lib.isDynamic(p.id) ? [0, 0.25, 0.5, 0.75].map((u) => u * (p.period || 1)) : [0];
+    for (const t of times) {
+      const f = document.createElement('figure');
+      if (times.length > 1) f.className = 'dyn';
+      f.appendChild(draw(sil.mask(lib.configPose({ [slotOf[cat]]: p.id }, t))));
+      const cap = document.createElement('figcaption');
+      cap.textContent = times.length > 1 ? `${p.name} t=${t.toFixed(2)}` : p.name;
+      f.appendChild(cap); g.appendChild(f);
+    }
+  }
+}
+window.galleryDone = true;
+</script>
+</body>
+</html>

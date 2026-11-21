@@ -1,0 +1,3 @@
+{
+  "_doc": "Bone-name overrides for hand-edited or swapped character models. Leave empty when auto-detection works (hands/feet/head are found by name, arm/leg chains, neck, spine and hips by walking the hierarchy). Possible keys: handL, handR, footL, footR, head, neck, hips, forearmL, forearmR, upperarmL, upperarmR, shinL, shinR, thighL, thighR. Example: \"handL\": \"mixamorig:LeftHand\". If a model cannot be mapped, the error message lists all of its bone names."
+}

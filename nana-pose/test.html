@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>판정 테스트</title>
+<style>body { background: #111; color: #ddd; font: 12px monospace; padding: 12px; white-space: pre-wrap; }</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="out">running…</div>
+<script type="module">
+// Judge fairness check: every static preset's hole vs every other preset of the same slot.
+// "false pass" = a different preset slips through; also checks that the exact answer passes and is deterministic.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { PoseLib, PoseState } from './src/poses.js';
+import { Silhouette, judge, dilate, RULE } from './src/silhouette.js';
+
+const q = new URLSearchParams(location.search);
+if (q.has('out')) RULE.outsidePx = +q.get('out');
+if (q.has('miss')) RULE.missingPx = +q.get('miss');
+const [gltf, json] = await Promise.all([
+  new GLTFLoader().loadAsync('../shared/assets/models/darknana.glb'),
+  fetch('data/poses.json').then((r) => r.json()),
+]);
+const lib = new PoseLib(json);
+const sil = new Silhouette(new THREE.WebGLRenderer(), gltf.scene, {});
+const slotOf = { full: 'full', upper: 'upper', lower: 'lower', arm: 'armL', leg: 'legL', torso: 'torso' };
+const lines = [`rule ${JSON.stringify(RULE)}`];
+let falsePass = 0, falseFail = 0;
+for (const [cat, list] of Object.entries(lib.cat)) {
+  const slot = slotOf[cat];
+  const ps = list.filter((p) => !lib.isDynamic(p.id));
+  const masks = ps.map((p) => sil.mask(lib.configPose({ [slot]: p.id }, 0)));
+  for (let i = 0; i < ps.length; i++) {
+    const hole = dilate(masks[i], RULE.dilate);
+    for (let j = 0; j < ps.length; j++) {
+      const r = judge(masks[j], masks[i], hole);
+      if (i === j && !r.pass) { falseFail++; lines.push(`FALSE FAIL ${cat} ${ps[i].name}`); }
+      if (i !== j && r.pass) { falsePass++; lines.push(`false pass ${cat}: "${ps[j].name}" through hole "${ps[i].name}" out=${r.outsidePx}px miss=${r.missingPx}px`); }
+    }
+  }
+}
+// dynamic determinism + exactness: same t twice gives identical masks; the answer at hitT passes when evaluated via PoseState
+let dynBad = 0;
+for (const p of lib.list.filter((p) => lib.isDynamic(p.id))) {
+  const slot = slotOf[p.cat];
+  for (const t of [0.37, 1.91, 12.345]) {
+    const a = sil.mask(lib.configPose({ [slot]: p.id }, t)), b = sil.mask(lib.configPose({ [slot]: p.id }, t));
+    const st = new PoseState(lib); st.setSlot(slot, p.id, t - 2);   // chosen 2 s before the hit
+    const c = sil.mask(st.poseAt(t));
+    if (a.some((v, i) => v !== b[i])) { dynBad++; lines.push(`NONDETERMINISTIC ${p.name} t=${t}`); }
+    if (!judge(c, a, dilate(a, RULE.dilate)).pass) { dynBad++; lines.push(`DYN ANSWER FAILS ${p.name} t=${t}`); }
+  }
+}
+lines.unshift(`falsePass=${falsePass} falseFail=${falseFail} dynamicIssues=${dynBad}`);
+document.getElementById('out').textContent = lines.join('\n');
+window.testDone = { falsePass, falseFail, dynBad };
+console.log(lines.join('\n'));
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>포즈 에디터</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #14120e; color: #ddd3bb; font: 13px system-ui, sans-serif; display: grid; grid-template-columns: 1fr 360px; height: 100vh; }
+  #view { position: relative; min-height: 0; }
+  #c { width: 100%; height: 100%; display: block; }
+  #sil { position: absolute; left: 10px; bottom: 10px; width: 192px; height: 150px; image-rendering: pixelated; border: 1px solid #4a4233; background: #222; }
+  #side { overflow: auto; padding: 12px; border-left: 1px solid #333; }
+  h1 { font-size: 16px; margin: 0 0 8px; }
+  label { display: block; margin: 8px 0 2px; color: #a69c84; font-size: 12px; }
+  select, input[type=text], button { width: 100%; padding: 6px; background: #221e17; color: #eee; border: 1px solid #4a4233; font: inherit; }
+  button { cursor: pointer; margin-top: 6px; }
+  .rowb { display: flex; gap: 6px; } .rowb > * { flex: 1; }
+  .sl { display: grid; grid-template-columns: 70px 1fr 44px; align-items: center; gap: 6px; margin: 4px 0; }
+  .sl input { width: 100%; }
+  .hint { color: #7d7460; font-size: 11px; line-height: 1.5; margin-top: 10px; }
+  fieldset { border: 1px solid #3a3326; margin: 10px 0; padding: 6px 8px; } legend { color: #c9a227; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="view"><canvas id="c"></canvas><canvas id="sil" width="128" height="100"></canvas></div>
+<div id="side">
+  <h1>포즈 에디터</h1>
+  <div class="rowb"><button id="front">정면 (게임 시점)</button><button id="back">뒤</button></div>
+  <label>카테고리</label><select id="cat"></select>
+  <label>프리셋</label><select id="preset"></select>
+  <div class="rowb"><button id="dup">복제</button><button id="del">삭제</button></div>
+  <label>이름</label><input id="name" type="text">
+  <div id="composite"></div>
+  <fieldset id="dynbox"><legend>동적</legend>
+    <div class="rowb"><button id="play">▶ 재생</button><button id="addkey">키 추가</button><button id="delkey">키 삭제</button></div>
+    <div class="sl"><span>주기(s)</span><input id="period" type="range" min="0.3" max="3" step="0.05"><span id="periodv"></span></div>
+    <div class="sl"><span>시간 u</span><input id="u" type="range" min="0" max="0.999" step="0.001"><span id="uv"></span></div>
+    <label>키프레임</label><select id="key"></select>
+    <label>보간</label><select id="interp"><option>smooth</option><option>linear</option><option>step</option></select>
+  </fieldset>
+  <label>부위</label><select id="part"></select>
+  <div id="sliders"></div>
+  <button id="export">poses.json 내보내기</button>
+  <p class="hint">a: 0=아래, 90=옆, 180=위, 음수=몸 안쪽 / f: 앞으로 기울기.<br>arm·leg는 양쪽 공통, armL/armR는 한쪽만 덮어씀.<br>내보낸 파일로 <code>data/poses.json</code>을 교체하면 게임에 반영됩니다.<br>판정 공정성은 <code>test.html</code>, 전체 실루엣은 <code>gallery.html</code>에서 확인.</p>
+</div>
+<script type="module" src="src/editor.js"></script>
+</body>
+</html>

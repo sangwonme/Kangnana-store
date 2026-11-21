@@ -1,4 +1,4 @@
-// 빠나나 빠워! — climb a zig-zag staircase by picking left/right; 5 bananas = 강나나 form dash.
+// 무한의 나나 — climb a zig-zag staircase by picking left/right; 5 bananas = 강나나 form dash.
 import * as THREE from 'three';
 import { createRenderer, createScene, loadProps, Stairs, Decor, Puffs } from './world.js';
 import { Hero } from './hero.js';
