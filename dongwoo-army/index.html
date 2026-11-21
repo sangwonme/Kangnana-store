@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="동우 한 명으로 출발해 게이트를 지날 때마다 우르르! 동우 군단으로 거대 바나나 보스를 쓰러뜨려라.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="강나나 게임">
+<meta property="og:title" content="동우 군단">
+<meta property="og:description" content="동우 한 명으로 출발해 게이트를 지날 때마다 우르르! 동우 군단으로 거대 바나나 보스를 쓰러뜨려라.">
+<meta property="og:url" content="https://sangwonme.github.io/Kangnana-store/dongwoo-army/">
+<meta property="og:image" content="https://sangwonme.github.io/Kangnana-store/dongwoo-army/thumb.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="360">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="동우 군단">
+<meta name="theme-color" content="#7fd0ff">
+<title>동우 군단</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <canvas id="view"></canvas>
+  <div id="flash"></div>
+  <div id="top">
+    <div id="lv">1</div>
+    <div id="bank"><img src="assets/banana.png" alt=""><b id="bn">0</b></div>
+  </div>
+  <button id="mute" aria-label="소리">🔊</button>
+  <div id="crowd" hidden>1</div>
+  <div id="hp" hidden>10</div>
+  <div id="pops"></div>
+  <div id="title">
+    <h1>동우<br>군단</h1>
+    <div class="hand">👆</div>
+  </div>
+  <div id="result" hidden>
+    <div id="res-big"></div>
+    <div id="res-gain"><img src="assets/banana.png" alt=""><b id="gain">0</b></div>
+    <button id="next" aria-label="다음">▶</button>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="바나나가 익는 작은 하늘섬에서 동우와 느긋하게. 따고, 꾸미고, 쉬어요.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="강나나 게임">
+<meta property="og:title" content="나나섬">
+<meta property="og:description" content="바나나가 익는 작은 하늘섬에서 동우와 느긋하게. 따고, 꾸미고, 쉬어요.">
+<meta property="og:url" content="https://sangwonme.github.io/Kangnana-store/nana-island/">
+<meta property="og:image" content="https://sangwonme.github.io/Kangnana-store/nana-island/thumb.jpg">
+<meta property="og:image:width" content="640">
+<meta property="og:image:height" content="360">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="나나섬">
+<meta name="theme-color" content="#bfe6ff">
+<title>나나섬</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="app">
+  <div id="sky"><div id="stars"></div></div>
+  <canvas id="view"></canvas>
+  <div id="count"><img src="assets/icons/banana.png" alt=""><b id="n">0</b></div>
+  <button id="mute" aria-label="소리">🔊</button>
+  <div id="pops"></div>
+  <div id="shop"></div>
+  <div id="title">
+    <h1>나나섬</h1>
+    <button id="go" aria-label="시작" disabled>▶</button>
+  </div>
+</div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
