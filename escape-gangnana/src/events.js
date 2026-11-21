@@ -1,4 +1,4 @@
-﻿// Scripted horror moments: build-ups, banana rain, the hall TV, window silhouette, finale + jumpscare.
+// Scripted horror moments: build-ups, banana rain, the hall TV, window silhouette, finale + jumpscare.
 // 강나나 herself only appears in the finale.
 import * as THREE from 'three';
 import { makeBanana } from './cooking.js';
@@ -370,7 +370,7 @@ export class Events {
     if (s.buffers.banana_cm_radio) return s.buffers.banana_cm_radio;
     let src;
     try {
-      src = await new THREE.AudioLoader().loadAsync('assets/audio/banana_cm.mp3');
+      src = await new THREE.AudioLoader().loadAsync('../shared/assets/audio/banana_cm.mp3');
     } catch {
       src = await placeholderJingle();
     }

@@ -1,4 +1,4 @@
-﻿// Loads the kitchen/hall environment (or a placeholder), collects anchors + colliders, sets up lights.
+// Loads the kitchen/hall environment (or a placeholder), collects anchors + colliders, sets up lights.
 import * as THREE from 'three';
 import { toPS1, ps1Material } from './ps1.js';
 
@@ -55,7 +55,7 @@ function placeholder() {
 export async function loadWorld(scene, loader, onProgress) {
   let root;
   try {
-    root = (await loader.loadAsync('assets/env/kitchen.glb', onProgress)).scene;
+    root = (await loader.loadAsync('../shared/assets/env/kitchen.glb', onProgress)).scene;
   } catch (e) {
     console.warn('kitchen.glb not found, using placeholder', e);
     root = placeholder();

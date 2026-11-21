@@ -1,4 +1,4 @@
-﻿// Audio manager: loads assets/audio/manifest.json, plays loops, one-shots and 3D positional sounds.
+// Audio manager: loads assets/audio/manifest.json, plays loops, one-shots and 3D positional sounds.
 // Missing files are skipped silently so the game runs before audio exists.
 import * as THREE from 'three';
 
@@ -13,7 +13,7 @@ export class Sound {
   async load() {
     let manifest = [];
     try {
-      manifest = await (await fetch('assets/audio/manifest.json')).json();
+      manifest = await (await fetch('../shared/assets/audio/manifest.json')).json();
     } catch {
       console.warn('no audio manifest yet');
       return;
@@ -21,7 +21,7 @@ export class Sound {
     const loader = new THREE.AudioLoader();
     await Promise.all(manifest.map(async (e) => {
       try {
-        this.buffers[e.id] = await loader.loadAsync(`assets/audio/${e.file.split('/').pop()}`);
+        this.buffers[e.id] = await loader.loadAsync(`../shared/assets/audio/${e.file.split('/').pop()}`);
       } catch (err) {
         console.warn('audio failed', e.id, err);
       }

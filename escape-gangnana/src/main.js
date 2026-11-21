@@ -1,4 +1,4 @@
-﻿import * as THREE from 'three';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { PS1Post } from './ps1.js';
 import { loadWorld, flicker } from './world.js';
@@ -91,10 +91,10 @@ const loader = new GLTFLoader();
 const loading = $('start');
 const [world, dongwoo, gangnana, rider, riderX] = await Promise.all([
   loadWorld(scene, loader, (e) => { if (e.total) loading.textContent = `불러오는 중… ${Math.round((e.loaded / e.total) * 100)}%`; }),
-  Character.load(loader, 'assets/models/dongwoo.glb'),
-  Character.load(loader, 'assets/models/gangnana.glb', { fallbackColor: 0xf2cf22 }),
-  Character.load(loader, 'assets/models/rider.glb', { fallbackColor: 0x1a1c22 }),
-  Character.load(loader, 'assets/models/rider_banana.glb', { fallbackColor: 0x1a1c22 }),
+  Character.load(loader, '../shared/assets/models/dongwoo.glb'),
+  Character.load(loader, '../shared/assets/models/gangnana.glb', { fallbackColor: 0xf2cf22 }),
+  Character.load(loader, '../shared/assets/models/rider.glb', { fallbackColor: 0x1a1c22 }),
+  Character.load(loader, '../shared/assets/models/rider_banana.glb', { fallbackColor: 0x1a1c22 }),
   game.sound.load(),
 ]);
 game.world = world;
