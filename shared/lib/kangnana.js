@@ -236,9 +236,12 @@ export async function myBest(gameId) {
   } catch { return null; }
 }
 
+// records left behind by automated tests (their accounts are gone, so the rules won't let anyone delete them)
+export const HIDDEN_UIDS = new Set(['hhaF8FOrL2VENgiPGIc5ExX7hkt2']);
+
 /** Top players of a game, best first. */
 export async function topScores(gameId, n = 50) {
   const q = query(collection(db, 'leaderboards', gameId, 'players'), orderBy('best', 'desc'), limit(n));
   const s = await withTimeout(getDocs(q), 12000);
-  return s.docs.map((d) => ({ uid: d.id, ...d.data() }));
+  return s.docs.filter((d) => !HIDDEN_UIDS.has(d.id)).map((d) => ({ uid: d.id, ...d.data() }));
 }

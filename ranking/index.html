@@ -59,7 +59,7 @@
   <section id="board"></section>
 </main>
 <script type="module">
-import { GAMES, onUser, nickOf, topScores, db, logOut, withTimeout } from '../shared/lib/kangnana.js';
+import { GAMES, onUser, nickOf, topScores, db, logOut, withTimeout, HIDDEN_UIDS } from '../shared/lib/kangnana.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js';
 
 // microgame names for the 메이드인 강나나 champion table (id -> command)
@@ -117,6 +117,7 @@ async function microTable() {
   const snap = await withTimeout(getDocs(collection(db, 'leaderboards', 'made-in-nana', 'players')), 12000);
   const best = {};
   snap.forEach((d) => {
+    if (HIDDEN_UIDS.has(d.id)) return;
     const { nick, micro } = d.data();
     for (const [id, v] of Object.entries(micro || {})) {
       const w = v.w || 0, p = v.p || 0;

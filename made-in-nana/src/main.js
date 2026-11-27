@@ -161,6 +161,8 @@ async function leaderboard(parent) {
   }
   const me = K.currentUser();
   const myIdx = me ? rows.findIndex((r) => r.uid === me.uid) : -1;
+  // long names get a smaller font so the whole name always fits (podium slot ≈ 7 chars, row ≈ 13 chars at full size)
+  const fit = (text, full, room) => `font-size:calc(var(--u) * ${Math.min(full, (full * room) / Math.max(1, [...text].length)).toFixed(2)})`;
   // podium slots (% of lb_podium.png): [x0, x1, nameY0, nameY1, scoreY0, scoreY1]
   const SLOT = [[34.5, 65.5, 51.1, 76.9, 80.3, 92.1], [2.9, 29.9, 56.5, 76.7, 79.4, 90.2], [70.1, 97.0, 56.8, 76.7, 79.4, 90.2]];
   const pod = SLOT.map(([x0, x1, a0, a1, b0, b1], i) => {
@@ -169,8 +171,6 @@ async function leaderboard(parent) {
     const box = (y0, y1, html, c) => `<div class="slot ${c} ${cls}" style="left:${x0}%;width:${x1 - x0}%;top:${y0}%;height:${y1 - y0}%">${html}</div>`;
     return box(a0, a1, `<span class="nm" style="${r ? fit(r.nick, 3, 6.5) : ''}">${r ? esc(r.nick) : '-'}</span>`, '') + box(b0, b1, `<span class="sc">${r ? r.best : ''}</span>`, '');
   }).join('');
-  // long names get a smaller font so the whole name always fits (podium slot ≈ 7 chars, row ≈ 13 chars at full size)
-  const fit = (text, full, room) => `font-size:calc(var(--u) * ${Math.min(full, (full * room) / Math.max(1, [...text].length)).toFixed(2)})`;
   const row = (r, i, extra = '') => `<div class="lb-row ${extra}"><b class="rk">${i + 1}</b><span class="nm" style="${fit(r.nick, 3.3, 13)}">${esc(r.nick)}</span>
     <span class="sc">${r.best}</span></div>`;
   let list = rows.slice(3, 10).map((r, k) => row(r, k + 3, myIdx === k + 3 ? 'me mine' : '')).join('');
