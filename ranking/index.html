@@ -33,7 +33,7 @@
   li.mine { background: var(--me); }
   .rk { font: 800 18px 'Nanum Myeongjo', serif; color: var(--dim); text-align: center; }
   li:nth-child(1) .rk { color: #ffd34d; } li:nth-child(2) .rk { color: #d6d6d6; } li:nth-child(3) .rk { color: #d08a4f; }
-  .nm { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nm { font-weight: 700; white-space: nowrap; min-width: 0; }
   .nm small { display: block; font-weight: 400; font-size: 12px; color: var(--dim); margin-top: 2px; }
   .sc { font: 800 20px 'Nanum Myeongjo', serif; color: var(--accent); }
   .sc span { font: 400 12px 'Nanum Gothic'; color: var(--dim); margin-left: 3px; }
@@ -100,7 +100,7 @@ async function render() {
     else {
       html = `<ol>${rows.map((r, i) => `<li class="${me && r.uid === me.uid ? 'mine' : ''}">
         <div class="rk">${i + 1}</div>
-        <div class="nm">${esc(r.nick)}<small>플레이 ${r.plays ?? 1}회 · ${fmtDate(r.at)}</small></div>
+        <div class="nm" style="font-size:${Math.min(16, 104 / Math.max(1, [...String(r.nick)].length)).toFixed(1)}px">${esc(r.nick)}<small>플레이 ${r.plays ?? 1}회 · ${fmtDate(r.at)}</small></div>
         <div class="sc">${r.best}<span>${g.unit}</span></div></li>`).join('')}</ol>`;
     }
     if (cur === 'made-in-nana') html += await microTable();

@@ -167,15 +167,17 @@ async function leaderboard(parent) {
     const r = rows[i];
     const cls = r && myIdx === i ? 'mine' : '';
     const box = (y0, y1, html, c) => `<div class="slot ${c} ${cls}" style="left:${x0}%;width:${x1 - x0}%;top:${y0}%;height:${y1 - y0}%">${html}</div>`;
-    return box(a0, a1, `<span class="nm">${r ? esc(r.nick) : '-'}</span>`, '') + box(b0, b1, `<span class="sc">${r ? r.best : ''}</span>`, '');
+    return box(a0, a1, `<span class="nm" style="${r ? fit(r.nick, 3, 6.5) : ''}">${r ? esc(r.nick) : '-'}</span>`, '') + box(b0, b1, `<span class="sc">${r ? r.best : ''}</span>`, '');
   }).join('');
-  const row = (r, i, extra = '') => `<div class="lb-row ${extra}"><b class="rk">${i + 1}</b><span class="nm">${esc(r.nick)}</span>
+  // long names get a smaller font so the whole name always fits (podium slot ≈ 7 chars, row ≈ 13 chars at full size)
+  const fit = (text, full, room) => `font-size:calc(var(--u) * ${Math.min(full, (full * room) / Math.max(1, [...text].length)).toFixed(2)})`;
+  const row = (r, i, extra = '') => `<div class="lb-row ${extra}"><b class="rk">${i + 1}</b><span class="nm" style="${fit(r.nick, 3.3, 13)}">${esc(r.nick)}</span>
     <span class="sc">${r.best}</span></div>`;
   let list = rows.slice(3, 10).map((r, k) => row(r, k + 3, myIdx === k + 3 ? 'me mine' : '')).join('');
   if (rows.length <= 3) list += '<div class="lb-msg" style="padding:4% 0">4위부터는 아직 비어 있어요</div>';
   if (me && (myIdx < 0 || myIdx >= 10)) {
     const mine = myIdx >= 0 ? rows[myIdx] : { nick: K.nickOf(me), best: best };
-    list += `<div class="lb-row me mine"><b class="rk">${myIdx >= 0 ? myIdx + 1 : '-'}</b><span class="nm">나 · ${esc(mine.nick)}</span>
+    list += `<div class="lb-row me mine"><b class="rk">${myIdx >= 0 ? myIdx + 1 : '-'}</b><span class="nm" style="${fit(`나 · ${mine.nick}`, 3.3, 12)}">나 · ${esc(mine.nick)}</span>
       <span class="sc">${mine.best}</span></div>`;
   }
   inner.innerHTML = `<div class="lb-podium"><img src="assets/img/lb_podium.png" alt="">${pod}</div>${list}`;
