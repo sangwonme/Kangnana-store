@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#ffd400">
+<meta name="description" content="몇 초짜리 마이크로게임이 쉴 새 없이 터진다. 명령어 한 마디만 보고 해치워라! 강나나 세계관 B급 마이크로게임 모음.">
+<title>만져라! 메이드인 강나나</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preload" as="font" type="font/woff" crossorigin href="https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff">
+<link rel="stylesheet" href="src/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="box">
+  <canvas id="gl"></canvas>
+  <canvas id="c2d"></canvas>
+  <div id="hud">
+    <div id="fuse"><img id="fuse-bomb" src="assets/img/fuse_bomb.png" alt=""><div id="fuse-track"><div id="fuse-bar"><i id="fuse-spark"></i></div></div></div>
+    <div id="count"></div>
+  </div>
+  <div id="cmd"><div class="cmd-text"></div><div class="cmd-hint"></div></div>
+  <div id="caption"></div>
+  <div id="screen"></div>
+</div>
+<button id="mute" aria-label="소리 켜기/끄기">🔊</button>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

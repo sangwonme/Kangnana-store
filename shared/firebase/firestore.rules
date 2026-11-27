@@ -1,0 +1,26 @@
+rules_version = '2';
+// Firebase 콘솔 > Firestore Database > 규칙 탭에 이 내용을 붙여넣고 "게시".
+// 누구나 랭킹을 볼 수 있고, 각자 자기 기록만 쓰고 지울 수 있으며, 최고 기록(best)은 내려갈 수 없다.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.nick is string && request.resource.data.nick.size() <= 10;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+    match /leaderboards/{game}/players/{uid} {
+      function valid() {
+        let d = request.resource.data;
+        return game in ['made-in-nana', 'banana-power']
+          && d.nick is string && d.nick.size() <= 10
+          && d.best is number && d.best >= 0 && d.best < 100000;
+      }
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == uid && valid();
+      allow update: if request.auth != null && request.auth.uid == uid && valid()
+        && request.resource.data.best >= resource.data.best;
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}

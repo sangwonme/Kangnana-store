@@ -20,7 +20,7 @@ export const BEATS = [
   { label: '주문 · 부리또 (소스 따로)', clock: 88, gap: 6,
     run: (g) => g.cooking.order({ menu: 'burrito', req: '소스는 따로 담아주세요' }) },
   { label: '이벤트 · 천장에서 바나나 우수수', clock: 102, gap: 6,
-    run: (g) => g.events.bananaRain() },
+    run: (g) => g.events.bananaRain({ wait: true }) }, // only once the kitchen is in view
   { label: '주문 · 바나나 한바구니 (줍기 ×20)', clock: 104, gap: 2.5,
     run: (g) => g.cooking.order({ menu: 'basket', req: '바나나 한바구니 주세요' }) },
   { label: '주문 + 바나나헬멧 배달기사', clock: 118, gap: 6,

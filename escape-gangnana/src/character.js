@@ -1,6 +1,6 @@
 ﻿// Animated character wrapper (glTF + AnimationMixer) with a placeholder fallback and waypoint walking.
 import * as THREE from 'three';
-import { toPS1, ps1Material } from './ps1.js';
+import { toPS1, ps1Material } from '../../shared/lib/ps1.js';
 import { makeHood } from './cooking.js';
 
 function placeholderBody(color) {

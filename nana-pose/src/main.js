@@ -2,7 +2,7 @@
 // One game clock drives everything; walls are generated from a known answer and judged at their exact hit time.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { PoseRig } from './rig.js';
+import { PoseRig } from '../../shared/lib/rig.js';
 import { PoseLib, PoseState, SLOTS, NEUTRAL_ID } from './poses.js';
 import { Silhouette, judge, dilate, touchesEdge, RULE, WIN } from './silhouette.js';
 import { Wall, splatTexture } from './wall.js';
@@ -476,7 +476,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) setPa
 sound = new Sound();
 $('mute').textContent = sound.muted ? '🔇' : '🔊';
 const texLoader = new THREE.TextureLoader();
-const loadTex = (n) => texLoader.loadAsync(`assets/tex/${n}.jpg`).then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; });
+const loadTex = (n) => texLoader.loadAsync(`../shared/assets/tex/${n}.jpg`).then((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; });
 const gl = new GLTFLoader();
 const loadProp = (n) => gl.loadAsync(`${PROPS}${n}.glb`).then((g) => g.scene).catch(() => null);
 const [gltf, json, overrides, tex, props] = await Promise.all([

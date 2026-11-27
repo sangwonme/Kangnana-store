@@ -1,6 +1,6 @@
 // Title screen: a single banana lying on night asphalt under a street light, slow orbiting camera.
 import * as THREE from 'three';
-import { ps1Material } from './ps1.js';
+import { ps1Material } from '../../shared/lib/ps1.js';
 
 function asphaltTexture() {
   const c = document.createElement('canvas');

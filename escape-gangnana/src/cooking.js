@@ -1,6 +1,6 @@
 ﻿// Cooking + orders. The night's event flow (flow.js) calls order()/note(); requests are mandatory extra steps (★).
 import * as THREE from 'three';
-import { ps1Material } from './ps1.js';
+import { ps1Material } from '../../shared/lib/ps1.js';
 
 export const STEP = {
   tortilla: { label: '또띠아 꺼내기', sfx: 'food_plop' },

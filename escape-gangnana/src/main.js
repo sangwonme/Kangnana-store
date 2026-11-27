@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { PS1Post } from './ps1.js';
+import { PS1Post } from '../../shared/lib/ps1.js';
 import { loadWorld, flicker } from './world.js';
 import { Player } from './player.js';
 import { Character } from './character.js';

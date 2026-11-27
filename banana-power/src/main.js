@@ -7,6 +7,10 @@ import { Sound } from './audio.js';
 const $ = (id) => document.getElementById(id);
 const rand = (a, b) => a + Math.random() * (b - a);
 const params = new URLSearchParams(location.search);
+// accounts + records (Firebase); the game still runs without it if the SDK can't load
+const K = await import('../../shared/lib/kangnana.js').catch((e) => { console.warn('firebase unavailable', e); return null; });
+const chip = K?.accountChip({ rankingHref: '../ranking/?game=banana-power', corner: 'left-top' });
+const showChip = (on) => { if (chip) chip.style.display = on ? '' : 'none'; };
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 if (isTouch) document.body.classList.add('touch');
 
@@ -248,11 +252,23 @@ function gameOver() {
   $('best-title').textContent = best;
   $('newbest').hidden = !isBest;
   $('over').hidden = false;
+  showChip(true);
+  K?.submitScore('banana-power', S.score).then((r) => {
+    if (r && r.best > best) { best = r.best; $('best-over').textContent = best; $('best-title').textContent = best; }
+  });
   $('hud').hidden = true;
   sound.play(isBest && S.score > 0 ? 'record' : 'gameover', { vol: 0.8 });
 }
 
+// login first (instant when the session is already stored on this device), then play
+async function begin() {
+  sound.unlock();
+  if (K && !K.currentUser()) { showChip(false); await K.requireLogin('무한의 나나'); }
+  startGame();
+}
+
 function startGame() {
+  showChip(false);
   sound.unlock();
   sound.play('tap', { vol: 0.7 });
   sound.music('bgm');
@@ -356,7 +372,7 @@ addEventListener('keydown', (e) => {
   if (['ArrowLeft', 'KeyA', 'KeyF'].includes(k)) { e.preventDefault(); press(-1); }
   else if (['ArrowRight', 'KeyD', 'KeyJ'].includes(k)) { e.preventDefault(); press(1); }
   else if ((k === 'Space' || k === 'Enter') && (S.mode === 'title' || S.mode === 'over') && !$('start').disabled) {
-    e.preventDefault(); startGame();
+    e.preventDefault(); begin();
   }
 });
 app.addEventListener('pointerdown', (e) => {
@@ -366,8 +382,8 @@ app.addEventListener('pointerdown', (e) => {
   const r = app.getBoundingClientRect();
   press(e.clientX - r.left < r.width / 2 ? -1 : 1);
 });
-$('start').addEventListener('click', startGame);
-$('retry').addEventListener('click', startGame);
+$('start').addEventListener('click', begin);
+$('retry').addEventListener('click', begin);
 $('mute').addEventListener('click', () => {
   sound.unlock();
   sound.setMuted(!sound.muted);
@@ -400,6 +416,7 @@ S.mode = 'title';
 updateCamera(0, true);
 start.disabled = false;
 start.textContent = '시작!';
+K?.myBest('banana-power').then((b) => { if (b != null && b > best) { best = b; $('best-title').textContent = b; } });
 
 window.game = { S, get stairs() { return stairs; }, get hero() { return hero; }, press, startGame, startPower };
 if (params.has('autostart')) startGame();

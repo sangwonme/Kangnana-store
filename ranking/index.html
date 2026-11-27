@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>강나나 랭킹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&family=Nanum+Myeongjo:wght@800&family=Jua&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0a0909; --card: #151313; --line: #2a2523; --text: #f2e9d0; --dim: #8f877a; --accent: #f2cf22; --me: #3a2f0a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at top, #1c160b, var(--bg) 60%); color: var(--text);
+    font-family: 'Nanum Gothic', sans-serif; }
+  header { padding: 48px 16px 20px; text-align: center; }
+  h1 { margin: 0; font: 800 clamp(30px, 7vw, 48px)/1.1 'Nanum Myeongjo', serif; text-shadow: 0 0 18px rgba(242, 207, 34, .35), 0 2px 6px #000; }
+  header p { margin: 10px 0 0; color: var(--dim); font-size: 14px; }
+  header a { color: var(--dim); }
+  main { max-width: 640px; margin: 0 auto; padding: 0 16px 80px; }
+  .tabs { display: flex; gap: 8px; margin: 8px 0 18px; overflow-x: auto; }
+  .tabs button { flex: 1; min-width: 140px; font: 700 15px 'Nanum Gothic'; color: var(--dim); background: var(--card); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 10px; cursor: pointer; }
+  .tabs button.on { color: #111; background: var(--accent); border-color: var(--accent); }
+  .me { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; display: flex;
+    justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; color: var(--dim); }
+  .me b { color: var(--text); }
+  .me a { color: var(--accent); }
+  h2 { font: 800 19px 'Nanum Myeongjo', serif; margin: 26px 0 10px; }
+  ol { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  li { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 12px 14px; background: var(--card);
+    border-top: 1px solid var(--line); }
+  li:first-child { border-top: 0; }
+  li.mine { background: var(--me); }
+  .rk { font: 800 18px 'Nanum Myeongjo', serif; color: var(--dim); text-align: center; }
+  li:nth-child(1) .rk { color: #ffd34d; } li:nth-child(2) .rk { color: #d6d6d6; } li:nth-child(3) .rk { color: #d08a4f; }
+  .nm { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nm small { display: block; font-weight: 400; font-size: 12px; color: var(--dim); margin-top: 2px; }
+  .sc { font: 800 20px 'Nanum Myeongjo', serif; color: var(--accent); }
+  .sc span { font: 400 12px 'Nanum Gothic'; color: var(--dim); margin-left: 3px; }
+  .empty, .err { padding: 28px; text-align: center; color: var(--dim); background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+  .micro { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .micro div { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+  .micro div b { display: block; font-family: 'Jua', sans-serif; font-size: 17px; margin-bottom: 4px; }
+  .micro div.boss b { color: #ff8a80; }
+  .micro div .who { color: var(--accent); }
+  .micro div .rate { color: var(--dim); font-size: 12px; }
+  .play { display: inline-block; margin-top: 18px; color: #111; background: var(--accent); padding: 10px 18px; border-radius: 8px; font-weight: 700;
+    text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🏆 강나나 랭킹</h1>
+  <p>게임별 최고 기록 · <a href="../">게임 목록으로</a></p>
+</header>
+<main>
+  <div class="me" id="me">불러오는 중…</div>
+  <div class="tabs" id="tabs"></div>
+  <section id="board"></section>
+</main>
+<script type="module">
+import { GAMES, onUser, nickOf, topScores, db, logOut, withTimeout } from '../shared/lib/kangnana.js';
+import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js';
+
+// microgame names for the 메이드인 강나나 champion table (id -> command)
+const MICRO = { kkara: '까라!', find: '한번에 찾아라!', nose: '파라!', wipe: '닦아라!', inflate: '부풀려라!', eat: '먹어라!', slice: '썰어라!',
+  roast: '구워라!', blend: '갈아라!', pour: '따라라!', dip: '담가라!', rush: '쳐내라!', pull: '뽑아라!', catch: '받아라!', spin: '돌려라!',
+  shake: '털어라!', slide: '미끄러져라!', guard: '지켜라!', swat: '모두 잡아라!', bat: '쳐라!', fart: '뀌어라!', clear: '치워라!', shmup: '물리쳐라!',
+  freeze: '멈춰라!', blast: '쏴라!', smile: '웃어라!', run: '도망쳐라!' };
+const BOSSES = new Set(['eat', 'rush', 'guard', 'shmup', 'run']);
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmtDate = (ts) => (ts?.toDate ? ts.toDate().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) : '');
+let me = null;
+let cur = new URLSearchParams(location.search).get('game') || 'made-in-nana';
+if (!GAMES[cur]) cur = 'made-in-nana';
+
+$('tabs').innerHTML = Object.entries(GAMES).map(([id, g]) => `<button data-g="${id}">${g.title}</button>`).join('');
+$('tabs').querySelectorAll('button').forEach((b) => { b.onclick = () => { cur = b.dataset.g; history.replaceState(null, '', `?game=${cur}`); render(); }; });
+
+onUser((u) => {
+  me = u;
+  $('me').innerHTML = u
+    ? `<span>🍌 <b>${esc(nickOf(u))}</b> 님으로 로그인됨</span><a href="#" id="out">로그아웃</a>`
+    : `<span>로그인하면 내 순위가 강조돼요. 게임을 시작하면 로그인 창이 떠요.</span>`;
+  $('out')?.addEventListener('click', async (e) => { e.preventDefault(); await logOut(); });
+  render();
+});
+
+async function render() {
+  $('tabs').querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.g === cur));
+  const g = GAMES[cur];
+  const board = $('board');
+  board.innerHTML = '<div class="empty">불러오는 중…</div>';
+  try {
+    const rows = await topScores(cur, 50);
+    let html = '';
+    if (!rows.length) html = `<div class="empty">아직 기록이 없어요. 첫 번째 주인공이 되세요!</div>`;
+    else {
+      html = `<ol>${rows.map((r, i) => `<li class="${me && r.uid === me.uid ? 'mine' : ''}">
+        <div class="rk">${i + 1}</div>
+        <div class="nm">${esc(r.nick)}<small>플레이 ${r.plays ?? 1}회 · ${fmtDate(r.at)}</small></div>
+        <div class="sc">${r.best}<span>${g.unit}</span></div></li>`).join('')}</ol>`;
+    }
+    if (cur === 'made-in-nana') html += await microTable();
+    html += `<div style="text-align:center"><a class="play" href="../${g.path}">${g.title} 하러 가기</a></div>`;
+    board.innerHTML = html;
+  } catch (e) {
+    console.error(e);
+    board.innerHTML = `<div class="err">랭킹을 불러오지 못했어요.<br><small>${esc(e.message || e.code)}</small></div>`;
+  }
+}
+
+// per-microgame champion: most wins (ties -> better success rate)
+async function microTable() {
+  const snap = await withTimeout(getDocs(collection(db, 'leaderboards', 'made-in-nana', 'players')), 12000);
+  const best = {};
+  snap.forEach((d) => {
+    const { nick, micro } = d.data();
+    for (const [id, v] of Object.entries(micro || {})) {
+      const w = v.w || 0, p = v.p || 0;
+      const b = best[id];
+      if (w > 0 && (!b || w > b.w || (w === b.w && w / p > b.w / b.p))) best[id] = { nick, w, p };
+    }
+  });
+  const ids = Object.keys(MICRO);
+  return `<h2>미니게임 장인</h2><div class="micro">${ids.map((id) => {
+    const b = best[id];
+    return `<div class="${BOSSES.has(id) ? 'boss' : ''}"><b>${MICRO[id]}</b>${b
+      ? `<span class="who">${esc(b.nick)}</span> <span class="rate">${b.w}승 / ${b.p}회</span>`
+      : '<span class="rate">도전자 없음</span>'}</div>`;
+  }).join('')}</div>`;
+}
+</script>
+</body>
+</html>

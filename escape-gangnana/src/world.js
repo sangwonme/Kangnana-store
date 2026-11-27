@@ -1,6 +1,6 @@
 // Loads the kitchen/hall environment (or a placeholder), collects anchors + colliders, sets up lights.
 import * as THREE from 'three';
-import { toPS1, ps1Material } from './ps1.js';
+import { toPS1, ps1Material } from '../../shared/lib/ps1.js';
 
 const DEFAULT_ANCHORS = {
   spawn_player: [0, 0, -2.8],

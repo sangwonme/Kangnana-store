@@ -2,7 +2,7 @@
 // axis. Wall holes and judging use this exact same renderer + projection, so what you see is what is judged.
 import * as THREE from 'three';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
-import { PoseRig } from './rig.js';
+import { PoseRig } from '../../shared/lib/rig.js';
 
 // window of the world (x, y at the wall plane) covered by a mask
 export const WIN = { x0: -1.6, x1: 1.6, y0: -0.05, y1: 2.45 };

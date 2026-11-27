@@ -2,10 +2,18 @@
 // 강나나 herself only appears in the finale.
 import * as THREE from 'three';
 import { makeBanana } from './cooking.js';
-import { ps1Material } from './ps1.js';
+import { ps1Material } from '../../shared/lib/ps1.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const KITCHEN_DOORWAY = V(-0.75, 0, -0.25);
+// kitchen interior floor bounds (tools/env/build_kitchen.py: x[-1.25,1.15], Blender y[0,3.6] -> glTF z[-3.6,0])
+const KITCHEN = { x0: -1.25, x1: 1.15, z0: -3.6, z1: 0.0 };
+// sample points inside the banana drop zone (aisle + back corner), at chest height
+const RAIN_VIEW_POINTS = [V(-0.78, 1.1, -0.7), V(-0.78, 1.1, -1.6), V(-0.78, 1.1, -2.4), V(0.02, 1.1, -2.35)];
+// finale: where the player is put during the blackout — deep in the kitchen aisle, straight down the line
+// to the doorway (nothing between: counters are at x>-0.38, prep table at z<-3.0, light fixture at y 2.5)
+const FINALE_SPOT = V(-0.75, 0, -2.45);
+const NANA_FACE_Y = 1.5;
 
 /** Wall-mounted CRT in the hall, angled toward the kitchen doorway. Screen = small pixelated canvas. */
 class TV {
@@ -204,12 +212,16 @@ export class Events {
 
   /** Is the object on screen and not blocked by the level? */
   seen(obj, maxDist = 14) {
+    return this.seenPoint(obj.getWorldPosition(new THREE.Vector3()).setY(1.4), maxDist);
+  }
+
+  /** Is a world point on screen (inside |ndc| nx/ny) and not blocked by the level? */
+  seenPoint(p, maxDist = 14, nx = 0.75, ny = 0.85) {
     const cam = this.g.camera;
-    const p = obj.getWorldPosition(new THREE.Vector3()).setY(1.4);
     const dist = p.distanceTo(cam.position);
     if (dist > maxDist) return false;
     const ndc = p.clone().project(cam);
-    if (ndc.z > 1 || Math.abs(ndc.x) > 0.75 || Math.abs(ndc.y) > 0.85) return false;
+    if (ndc.z > 1 || Math.abs(ndc.x) > nx || Math.abs(ndc.y) > ny) return false;
     this.ray.set(cam.position, p.clone().sub(cam.position).normalize());
     this.ray.far = dist - 0.3;
     const block = this.ray.intersectObject(this.g.world.root, true).find((h) =>
@@ -266,9 +278,21 @@ export class Events {
     g.sound.fadeLoop('heartbeat_loop', 0, 2);
   }
 
-  /** Bananas pour out of the kitchen ceiling — 20 of them end up on the floor. */
-  async bananaRain() {
+  /** Player is standing in the kitchen, or is looking at the drop zone (roughly centered, ~40° off-axis max, unblocked). */
+  kitchenInView() {
+    const p = this.g.player.pos;
+    if (p.x > KITCHEN.x0 && p.x < KITCHEN.x1 && p.z > KITCHEN.z0 && p.z < KITCHEN.z1) return true;
+    return RAIN_VIEW_POINTS.some((pt) => this.seenPoint(pt, 8, 0.7, 0.8));
+  }
+
+  /** Bananas pour out of the kitchen ceiling — 20 of them end up on the floor.
+   *  wait: hold off until the kitchen is in view (or the player is in it) for 0.3 s; debug/jump paths call it without. */
+  async bananaRain({ wait = false } = {}) {
     const g = this.g, c = g.cooking;
+    for (let held = 0; wait && held < 3;) {
+      await g.wait(0.1);
+      held = this.kitchenInView() ? held + 1 : 0;
+    }
     const free = (x, z) => !g.player.colliders.some((b) => b.min.y < 0.3 && b.max.y > 0.05 &&
       x > b.min.x - 0.12 && x < b.max.x + 0.12 && z > b.min.z - 0.12 && z < b.max.z + 0.12);
     const spots = [];
@@ -494,6 +518,11 @@ export class Events {
     g.power = 0;
     for (const id of ['amb_fridge_hum', 'amb_fluorescent']) g.sound.fadeLoop(id, 0, 0.8);
     this.hide();
+    // in the dark: put the player where the doorway is dead ahead, and lock the view so she can't be missed
+    const pl = g.player;
+    pl.canLook = false;
+    pl.place(FINALE_SPOT, KITCHEN_DOORWAY);
+    pl.pitch = Math.atan2(NANA_FACE_Y - pl.camera.position.y, FINALE_SPOT.distanceTo(KITCHEN_DOORWAY));
     await g.wait(1.2);
     g.sound.loop('printer_loop', 0);
     g.sound.fadeLoop('printer_loop', 0.55, 1);
@@ -506,6 +535,7 @@ export class Events {
     await g.wait(1.7);
     g.power = 0;
     this.hide();
+    g.player.canLook = true; // free again: the jumpscare appears wherever the camera points
     await g.wait(1.4);
     g.sound.play('breath_close', 1);
     await g.wait(2.4);

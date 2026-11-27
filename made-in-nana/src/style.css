@@ -1,0 +1,208 @@
+@font-face { font-family: 'ONE Mobile POP'; src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff'); font-display: swap; }
+:root { --yellow: #ffd400; --ink: #1b1306; --red: #ff3b30; --paper: #fff8dc; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+body {
+  background: repeating-linear-gradient(-45deg, #ffd400 0 28px, #ffcc00 28px 56px);
+  font-family: 'Pretendard Variable', Pretendard, sans-serif; color: var(--ink);
+  display: grid; place-items: center;
+}
+#box {
+  position: relative; overflow: hidden; background: #000;
+  width: min(100vw, 100dvh * 0.75); height: min(100dvh, 100vw / 0.75);
+  box-shadow: 0 0 0 6px var(--ink), 0 20px 60px rgba(0,0,0,.35);
+}
+#gl, #c2d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#c2d { pointer-events: none; }
+#box.no3d #gl { visibility: hidden; }
+
+/* HUD: bomb fuse at the bottom while a game runs */
+#hud { position: absolute; inset: 0; pointer-events: none; display: none; }
+#hud.on { display: block; }
+#fuse { position: absolute; left: 3%; right: 5%; bottom: 1.8%; height: 4.6%; }
+#fuse-bomb { position: absolute; left: 0; bottom: 0; height: 100%; filter: drop-shadow(0 calc(var(--u) * .4) 0 rgba(0,0,0,.35)); z-index: 1; }
+/* rope sits level with the bomb's body (ball centre is ~62% down the bomb image) */
+#fuse-track { position: absolute; left: 4.6%; right: 0; top: 62%; height: 34%; transform: translateY(-50%); }
+#fuse-bar { position: absolute; left: 0; top: 0; height: 100%; width: 100%;
+  background: url(../assets/img/fuse_rope.png) left center / auto 100% repeat-x; filter: drop-shadow(0 2px 0 rgba(0,0,0,.35)); }
+#fuse-spark { position: absolute; right: calc(var(--u) * -1.2); top: 50%; width: calc(var(--u) * 2.8); height: calc(var(--u) * 2.8);
+  transform: translate(0, -50%); border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 18%, #ffe066 30%, #ff9a1a 55%, rgba(255,80,0,0) 72%); animation: spark .09s infinite alternate; }
+@keyframes spark { from { transform: translate(0, -50%) scale(.8) rotate(0) } to { transform: translate(0, -50%) scale(1.25) rotate(40deg) } }
+#count { position: absolute; right: 4%; bottom: 6%; font: calc(var(--u) * 12)/1 'ONE Mobile POP'; color: #fff;
+  -webkit-text-stroke: calc(var(--u) * .6) var(--ink); paint-order: stroke; opacity: 0; }
+#count.tick { animation: tick .5s ease-out; }
+@keyframes tick { 0% { transform: scale(1.8); opacity: 1 } 100% { transform: scale(1); opacity: .9 } }
+
+/* command card */
+#cmd { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; opacity: 0; }
+#cmd.on { animation: cmdpop var(--cmd-dur, .9s) ease-out forwards; }
+.cmd-text { white-space: nowrap; font: calc(var(--u) * 19)/1 'ONE Mobile POP'; color: #fff; letter-spacing: -1px;
+  -webkit-text-stroke: calc(var(--u) * 1.4) var(--ink); paint-order: stroke; text-shadow: 0 calc(var(--u) * 1.2) 0 var(--ink); }
+.cmd-hint { font-family: 'ONE Mobile POP'; margin-top: calc(var(--u) * 2); font-size: calc(var(--u) * 5.5); color: var(--yellow);
+  -webkit-text-stroke: calc(var(--u) * .5) var(--ink); paint-order: stroke; }
+@keyframes cmdpop {
+  0% { opacity: 0; transform: scale(2.6) rotate(-8deg) }
+  12% { opacity: 1; transform: scale(.92) rotate(2deg) }
+  20% { transform: scale(1.05) rotate(-1deg) }
+  28%, 78% { opacity: 1; transform: scale(1) rotate(0) }
+  100% { opacity: 0; transform: scale(1.3) }
+}
+
+#caption { font-family: 'ONE Mobile POP'; position: absolute; left: 0; right: 0; bottom: 11%; text-align: center; pointer-events: none;
+  font-size: calc(var(--u) * 5.5); color: #fff; -webkit-text-stroke: calc(var(--u) * .55) #000; paint-order: stroke; opacity: 0; transition: opacity .15s; }
+#caption.on { opacity: 1; }
+
+/* full-box screens (title / intermission / game over) */
+#screen { position: absolute; inset: 0; display: none; overflow: hidden; }
+#screen.on { display: block; }
+.scr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 3); }
+.btn { pointer-events: auto; font: calc(var(--u) * 6)/1 'ONE Mobile POP'; color: var(--ink); background: var(--yellow);
+  border: calc(var(--u) * .8) solid var(--ink); border-radius: calc(var(--u) * 3); padding: calc(var(--u) * 3) calc(var(--u) * 7);
+  box-shadow: 0 calc(var(--u) * 1.2) 0 var(--ink); cursor: pointer; }
+.btn:active { transform: translateY(calc(var(--u) * 1)); box-shadow: 0 calc(var(--u) * .2) 0 var(--ink); }
+.btn.small { font-size: calc(var(--u) * 4.2); padding: calc(var(--u) * 2) calc(var(--u) * 4.5); background: #fff; }
+
+.title { background: repeating-conic-gradient(from 0deg at 50% 38%, #fff6c4 0 10deg, #ffeca0 10deg 20deg); justify-content: flex-start;
+  padding-top: calc(var(--u) * 3); gap: calc(var(--u) * 1.2); }
+.title .logo-img { width: 96%; filter: drop-shadow(0 calc(var(--u) * 1) 0 rgba(0,0,0,.18)); animation: logo-in .6s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes logo-in { from { transform: scale(.3) rotate(-8deg); opacity: 0 } to { transform: none; opacity: 1 } }
+.title img.hero { height: 25%; margin-top: calc(var(--u) * -2); animation: wobble 1.1s ease-in-out infinite; filter: drop-shadow(0 calc(var(--u) * 1.5) 0 rgba(0,0,0,.25)); }
+@keyframes wobble { 0%,100% { transform: rotate(-6deg) translateY(0) } 50% { transform: rotate(6deg) translateY(-4%) } }
+.ibtn { pointer-events: auto; border: 0; padding: 0; background: none; cursor: pointer; line-height: 0; -webkit-tap-highlight-color: transparent;
+  transition: transform .08s, filter .08s; }
+.ibtn img { width: 100%; height: auto; display: block; pointer-events: none; }
+.ibtn:active { transform: translateY(calc(var(--u) * .8)) scale(.97); filter: brightness(.88); }
+.title .start { width: 78%; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1) rotate(-1deg) } 50% { transform: scale(1.05) rotate(1deg) } }
+.title .start:active { animation: none; transform: scale(.95); }
+.title .row2 { display: flex; gap: 2%; width: 94%; justify-content: center; align-items: center; margin-top: calc(var(--u) * 3); }
+.modal { position: absolute; inset: 0; background: rgba(27,19,6,.55); display: grid; place-items: center; pointer-events: auto; z-index: 3; }
+.modal .card { width: 80%; background: var(--paper); border: calc(var(--u) * .8) solid var(--ink); border-radius: calc(var(--u) * 4);
+  box-shadow: 0 calc(var(--u) * 1.2) 0 var(--ink); padding: calc(var(--u) * 5); display: grid; gap: calc(var(--u) * 3); text-align: center; justify-items: center; }
+.modal h3 { margin: 0; font: calc(var(--u) * 7) 'ONE Mobile POP'; }
+.modal .big-num { font: calc(var(--u) * 20)/1 'ONE Mobile POP'; color: var(--red); -webkit-text-stroke: calc(var(--u) * .6) var(--ink); paint-order: stroke; }
+.modal p { margin: 0; font-size: calc(var(--u) * 3.8); font-weight: 700; }
+
+.inter { display: grid; place-items: center; }
+.inter .big { position: absolute; top: 4%; font: calc(var(--u) * 30)/1 'ONE Mobile POP'; color: #fff; -webkit-text-stroke: calc(var(--u) * 1.6) var(--ink); paint-order: stroke;
+  text-shadow: 0 calc(var(--u) * 1.6) 0 var(--ink); animation: bump .45s ease-in-out infinite alternate; }
+.inter .lives { position: absolute; top: 7%; display: flex; gap: calc(var(--u) * 2); }
+.inter .lives img { width: calc(var(--u) * 13); transition: transform .3s, filter .3s; }
+.inter .lives img.dead { filter: grayscale(1) brightness(.6); transform: rotate(80deg) scale(.8); }
+.inter .lives img.dying { animation: die .9s forwards; }
+@keyframes die { 0% { transform: scale(1.3) } 40% { transform: scale(1.3) rotate(-20deg) } 100% { transform: rotate(80deg) scale(.8); filter: grayscale(1) brightness(.6) } }
+.inter .face { position: absolute; bottom: 8%; width: calc(var(--u) * 34); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+  border: calc(var(--u) * 1) solid var(--ink); background: #ffd400 41% 81% / 180% auto no-repeat; animation: bob .35s ease-in-out infinite alternate; }
+.inter .face.lose { filter: grayscale(.8) hue-rotate(180deg); animation: sad 1s ease-in-out infinite alternate; }
+.inter .msg { position: absolute; top: 46%; bottom: auto; font: calc(var(--u) * 9)/1 'ONE Mobile POP'; color: var(--yellow);
+  -webkit-text-stroke: calc(var(--u) * .9) var(--ink); paint-order: stroke; transform: rotate(-4deg); }
+.inter .banner { position: absolute; top: 4%; width: 84%; left: 8%; filter: drop-shadow(0 calc(var(--u) * 1.2) 0 rgba(0,0,0,.3));
+  animation: banner-in .35s cubic-bezier(.2,1.6,.4,1) both, banner-shake .14s .35s infinite alternate; }
+@keyframes banner-in { from { transform: scale(2.4) rotate(-10deg); opacity: 0 } to { transform: scale(1) rotate(-3deg); opacity: 1 } }
+@keyframes banner-shake { from { transform: rotate(-3deg) translate(0, 0) } to { transform: rotate(-2deg) translate(2px, -2px) } }
+@keyframes bump { from { transform: scale(1) } to { transform: scale(1.08) } }
+@keyframes bob { from { transform: translateY(0) rotate(-4deg) } to { transform: translateY(-8%) rotate(4deg) } }
+@keyframes sad { from { transform: rotate(-10deg) } to { transform: rotate(-16deg) translateY(4%) } }
+@keyframes shakeit { 0% { transform: rotate(-3deg) translate(0,0) } 50% { transform: rotate(-2deg) translate(2px,-2px) } 100% { transform: rotate(-4deg) translate(-2px,1px) } }
+
+.over { background: #1b1306; color: #fff; }
+.over h1 { margin: 0; font: calc(var(--u) * 14)/1 'ONE Mobile POP'; color: var(--red); -webkit-text-stroke: calc(var(--u) * .8) #fff; paint-order: stroke; }
+.over .score { font: calc(var(--u) * 26)/1 'ONE Mobile POP'; color: var(--yellow); }
+.over .sub { font-size: calc(var(--u) * 4.5); opacity: .85; text-align: center; }
+.over > img { height: 30%; transform: rotate(80deg); filter: grayscale(.4); }
+
+.list { background: var(--paper); justify-content: flex-start; padding: calc(var(--u) * 5) calc(var(--u) * 4); overflow-y: auto; pointer-events: auto; }
+.list h2 { margin: 0; font: calc(var(--u) * 8)/1 'ONE Mobile POP'; }
+.list .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * 1.6); width: 100%; }
+/* outlined title text like the button art: white fill, black outline ~9% of the glyph outside, a solid drop below */
+.otext { font-family: 'ONE Mobile POP'; color: #fff; -webkit-text-stroke: .19em var(--ink); paint-order: stroke fill;
+  text-shadow: 0 .07em 0 var(--ink), .03em .07em 0 var(--ink), -.03em .07em 0 var(--ink); letter-spacing: -.01em; }
+.list .g { min-width: 0; overflow: hidden; position: relative; aspect-ratio: 437 / 257; background: url(../assets/img/mg_tile.png) center / 100% 100% no-repeat;
+  border: 0; display: grid; place-items: center; align-content: center; padding: 6% 6% 10%; cursor: pointer; text-align: center;
+  -webkit-tap-highlight-color: transparent; transition: transform .08s; }
+.list .g.boss { background-image: url(../assets/img/mg_tile_boss.png); }
+.list .g:hover { background-image: url(../assets/img/mg_tile_hl.png); }
+.list .g:active { background-image: url(../assets/img/mg_tile_down.png); transform: translateY(calc(var(--u) * .5)); }
+.list .g .otext { font-size: calc(var(--u) * 4.6); line-height: 1.15; white-space: nowrap; }
+.list .g .otext.long { font-size: calc(var(--u) * 3.6); }
+.list .g .otext.xlong { font-size: calc(var(--u) * 3.1); }
+.list .g small { display: block; margin-top: calc(var(--u) * .9); font: 700 calc(var(--u) * 2.4) 'Pretendard Variable', Pretendard, sans-serif;
+  color: #5b4a2e; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.list .g.boss small { color: #9c2f3f; }
+.list h2.otext { font-size: calc(var(--u) * 7.5); margin: 0 0 calc(var(--u) * 1); }
+.loading { font-family: 'ONE Mobile POP'; position: absolute; right: 3%; top: 3%; font-size: calc(var(--u) * 4); color: #fff; -webkit-text-stroke: 3px #000; paint-order: stroke; }
+
+#mute { position: fixed; right: 10px; top: 10px; z-index: 5; font-size: 22px; width: 44px; height: 44px; border-radius: 50%;
+  border: 3px solid var(--ink); background: #fff; cursor: pointer; }
+
+.credits { width: 100%; display: grid; gap: calc(var(--u) * 1.5); font-size: calc(var(--u) * 3); line-height: 1.45; }
+.credits div { background: #fff; border: calc(var(--u) * .4) solid var(--ink); border-radius: calc(var(--u) * 1.5); padding: calc(var(--u) * 1.6) calc(var(--u) * 2.2); }
+.credits b { display: block; font-size: calc(var(--u) * 3.3); }
+.credits a { color: #0b62c4; }
+.credits-note { font-size: calc(var(--u) * 2.8); opacity: .75; margin: 0; }
+
+/* ---- minigame gallery: fixed header, scrolling grid */
+.scr.list { padding: 0; overflow: hidden; justify-content: flex-start; gap: 0; }
+.list-head { flex: none; width: 100%; position: relative; display: flex; align-items: center; justify-content: center;
+  padding: calc(var(--u) * 4) calc(var(--u) * 3) calc(var(--u) * 2.6); background: var(--paper); z-index: 1;
+  box-shadow: 0 calc(var(--u) * .5) 0 rgba(27,19,6,.12); }
+.list-head h2 { margin: 0; }
+.list-head .back { position: absolute; left: calc(var(--u) * 3); top: 50%; transform: translateY(-40%); }
+.list-body { flex: 1; width: 100%; overflow-y: auto; padding: calc(var(--u) * 2.5) calc(var(--u) * 3) calc(var(--u) * 6); }
+.list .g .num { display: block; margin-bottom: calc(var(--u) * .6); font: 700 calc(var(--u) * 2.8) 'Pretendard Variable', Pretendard, sans-serif; color: #6b5a3a; }
+.list .g.boss .num { color: #9c2f3f; }
+.scr.list.credits-scr { overflow-y: auto; padding: calc(var(--u) * 5) calc(var(--u) * 4); gap: calc(var(--u) * 3); }
+
+/* ---- leaderboard popup (user's leaderboard art) */
+.lb { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; background: rgba(12,8,2,.66); pointer-events: auto;
+  animation: lb-fade .18s ease-out; }
+@keyframes lb-fade { from { opacity: 0 } }
+.lb-wrap { position: relative; width: calc(var(--u) * 92); animation: lb-pop .35s cubic-bezier(.2,1.5,.4,1); }
+@keyframes lb-pop { from { transform: scale(.6) } }
+.lb-ribbon { position: relative; width: calc(var(--u) * 78); margin: 0 auto calc(var(--u) * -9); z-index: 2; line-height: 0; }
+.lb-ribbon img { width: 100%; }
+.lb-ribbon .otext { position: absolute; left: 0; right: 0; top: 38%; transform: translateY(-50%); text-align: center; line-height: 1;
+  font-size: calc(var(--u) * 7.5); }
+.lb-panel { position: relative; height: calc(var(--u) * 106); box-sizing: border-box;
+  border-style: solid; border-width: calc(var(--u) * 21.6) calc(var(--u) * 4) calc(var(--u) * 4.4);
+  border-image: url(../assets/img/lb_panel.png) 139 26 29 26 fill / calc(var(--u) * 21.6) calc(var(--u) * 4) calc(var(--u) * 4.4); }
+.lb-inner { position: absolute; inset: 0; overflow-y: auto; padding: calc(var(--u) * 1.5) calc(var(--u) * 2) calc(var(--u) * 2); }
+.lb-podium { position: relative; width: 92%; margin: 0 auto calc(var(--u) * 1.2); line-height: 0; }
+.lb-podium img { width: 100%; }
+.lb-podium .slot { position: absolute; display: grid; place-items: center; line-height: 1.05; text-align: center; overflow: hidden; padding: 0 2%; }
+.lb-podium .nm { font: calc(var(--u) * 3) 'ONE Mobile POP'; color: var(--ink); word-break: keep-all; }
+.lb-podium .sc { font: calc(var(--u) * 3) 'ONE Mobile POP'; color: var(--red); }
+.lb-podium .mine .nm, .lb-row.mine .nm { color: #c2410c; }
+.lb-row { display: grid; grid-template-columns: calc(var(--u) * 7.6) 1fr auto; align-items: center; height: calc(var(--u) * 6.4);
+  margin: 0 0 calc(var(--u) * .9); box-sizing: border-box; border-style: solid; border-width: 0 calc(var(--u) * 2.6) 0 calc(var(--u) * 7.6);
+  border-image: url(../assets/img/lb_row.png) 0 30 0 90 fill / 0 calc(var(--u) * 2.6) 0 calc(var(--u) * 7.6); }
+.lb-row.me { border-image: url(../assets/img/lb_row_me.png) 20 50 12 104 fill / calc(var(--u) * 1.1) calc(var(--u) * 4.6) calc(var(--u) * .6) calc(var(--u) * 7.6);
+  border-width: calc(var(--u) * 1.1) calc(var(--u) * 4.6) calc(var(--u) * .6) calc(var(--u) * 7.6); height: calc(var(--u) * 8); margin-top: calc(var(--u) * 1.4); }
+.lb-row .rk { margin-left: calc(var(--u) * -7.6); width: calc(var(--u) * 7.6); text-align: center; font: calc(var(--u) * 3.3) 'ONE Mobile POP'; color: var(--ink); }
+.lb-row .nm { font: 700 calc(var(--u) * 3.3) 'Pretendard Variable', Pretendard, sans-serif; color: var(--ink); overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; padding-left: calc(var(--u) * 1); }
+.lb-row .sc { font: calc(var(--u) * 3.3) 'ONE Mobile POP'; color: var(--red); padding-left: calc(var(--u) * 1); }
+.lb-row .sc small { font: 700 calc(var(--u) * 2.2) 'Pretendard Variable', Pretendard, sans-serif; color: #8a6d3b; margin-left: calc(var(--u) * .4); }
+.lb-msg { padding: calc(var(--u) * 8) calc(var(--u) * 2); text-align: center; font: 700 calc(var(--u) * 3.6) 'Pretendard Variable', Pretendard, sans-serif; color: #6b5a3a; }
+.lb-x { position: absolute; right: calc(var(--u) * -1); top: calc(var(--u) * 6); z-index: 3; width: calc(var(--u) * 10); height: calc(var(--u) * 10);
+  border-radius: 50%; border: calc(var(--u) * .8) solid var(--ink); background: #fff; font: calc(var(--u) * 5)/1 'ONE Mobile POP'; color: var(--ink);
+  box-shadow: 0 calc(var(--u) * .8) 0 var(--ink); cursor: pointer; }
+.lb-x:active { transform: translateY(calc(var(--u) * .6)); box-shadow: 0 calc(var(--u) * .2) 0 var(--ink); }
+.lb-more { display: block; margin-top: calc(var(--u) * 2.4); text-align: center; font: calc(var(--u) * 3.6) 'ONE Mobile POP'; color: #fff;
+  -webkit-text-stroke: .19em var(--ink); paint-order: stroke fill; text-decoration: none; }
+
+/* ---- first-visit intro: tap -> logo + voice -> the rest of the title slides in with the music */
+.title.tap { display: grid; place-items: center; cursor: pointer; }
+.title.tap { justify-content: center; align-items: center; }
+.tap-start { width: 100%; text-align: center; font-size: calc(var(--u) * 8); animation: pulse 1s ease-in-out infinite; }
+.title.intro .hero, .title.intro .start, .title.intro .row2 { opacity: 0; transform: translateY(calc(var(--u) * 6)); }
+.title.intro .logo-img { animation: logo-in .7s cubic-bezier(.2,1.6,.4,1) both, logo-shout .35s ease-in-out .7s 3 alternate; }
+@keyframes logo-shout { to { transform: scale(1.06) rotate(-1.5deg) } }
+.title.intro.reveal .hero, .title.intro.reveal .start, .title.intro.reveal .row2 { opacity: 1; transform: none;
+  transition: opacity .35s ease-out, transform .45s cubic-bezier(.2,1.5,.4,1); }
+.title.intro.reveal .start { transition-delay: .12s; animation: pulse 1s ease-in-out .6s infinite; }
+.title.intro.reveal .row2 { transition-delay: .22s; }
+
+.list-sec { margin: calc(var(--u) * 3) 0 calc(var(--u) * 1.6); font-size: calc(var(--u) * 5.2); text-align: left; }
+.list-body > .list-sec:first-child { margin-top: calc(var(--u) * .5); }

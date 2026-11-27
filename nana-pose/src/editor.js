@@ -1,7 +1,7 @@
 // Pose editor: edit data/poses.json presets with live character + judged-silhouette preview, export the file.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { PoseRig } from './rig.js';
+import { PoseRig } from '../../shared/lib/rig.js';
 import { PoseLib } from './poses.js';
 import { Silhouette, MW, MH } from './silhouette.js';
 

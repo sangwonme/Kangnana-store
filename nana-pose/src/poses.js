@@ -1,6 +1,6 @@
 // Pose library + time-based evaluation. Everything here is a pure function of game time t:
 // the same t always gives the same pose (rendering, wall-hole generation and judging all call these).
-import { NEUTRAL } from './rig.js';
+import { NEUTRAL } from '../../shared/lib/rig.js';
 
 export const PARTS = ['torso', 'head', 'armL', 'armR', 'legL', 'legR'];
 export const SLOTS = {
