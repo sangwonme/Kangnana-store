@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import { PS1Post } from '../../../shared/lib/ps1.js';
 import { A } from './assets.js';
 
+export { A }; // main.js takes A from here so there is only one assets.js instance
+
 export const W = 600;
 export const H = 800;
 

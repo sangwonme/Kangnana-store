@@ -1,16 +1,16 @@
 // 만져라! 메이드인 강나나 — title, the endless microgame run, intermissions, game over, practice list.
-import { Sound } from './core/audio.js';
-import { Stage } from './core/stage.js';
-import { Scheduler, BOSS_EVERY } from './core/schedule.js';
-import { A } from './core/assets.js';
-import { GAMES } from './games/index.js';
-import { BananaWorld } from './core/idle.js';
+// Every module that changes often is loaded with the page's ?v= version (bumped on each deploy by
+// tools/made-in-nana/bump_version.py), so a new deploy never runs against stale cached files.
+// assets.js / ps1.js stay unversioned: they're shared by many modules and must stay a single instance.
+const V = new URL(import.meta.url).search;
+const [{ Sound }, { Stage, A }, { Scheduler, BOSS_EVERY }, { GAMES }, { BananaWorld }] = await Promise.all(
+  ['./core/audio.js', './core/stage.js', './core/schedule.js', './games/index.js', './core/idle.js'].map((m) => import(m + V)));
 
 let best = 0;
 try { best = +localStorage.getItem('min-best') || 0; } catch {}
 
 // accounts + records (Firebase). If the SDK can't load (offline), the game still runs, just without recording.
-const K = await import('../../shared/lib/kangnana.js').catch((e) => { console.warn('firebase unavailable', e); return null; });
+const K = await import(`../../shared/lib/kangnana.js${V}`).catch((e) => { console.warn('firebase unavailable', e); return null; });
 const chip = K?.accountChip({ rankingHref: '../ranking/?game=made-in-nana', corner: 'left-top' });
 const showChip = (on) => { if (chip) chip.style.display = on ? '' : 'none'; };
 async function login() {
@@ -32,7 +32,7 @@ const LIVES = 4;
 const START_SPEED = 1.15 ** 2; // = the old tempo of game 20 (1.3225x)
 const BG = ['#ff5a5f', '#3ec1d3', '#7bd389', '#b388ff', '#ff9f1c', '#2ec4b6', '#f15bb5', '#00bbf9'];
 
-const mods = (await Promise.all(GAMES.map((f) => import(`./games/${f}.js`)
+const mods = (await Promise.all(GAMES.map((f) => import(`./games/${f}.js${V}`)
   .then((m) => ({ ...m.default, file: f }))
   .catch((e) => { console.warn('skip game', f, e.message); return null; }))))
   .filter(Boolean).sort((a, b) => a.no - b.no);
