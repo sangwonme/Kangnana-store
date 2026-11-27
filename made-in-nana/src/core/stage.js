@@ -58,6 +58,7 @@ export class Stage {
     };
     this.box.addEventListener('pointerdown', (e) => {
       if (!this.inst) return;
+      if (this._trap && this.G && !this.G.result) { this._trap(); return; }
       this.box.setPointerCapture?.(e.pointerId);
       down.add(e.pointerId);
       send('down', e);
@@ -98,7 +99,8 @@ export class Stage {
   }
 
   /** Run one game to completion. Resolves to 'win' | 'lose'. */
-  run(game, { level = 1, speed = 1 } = {}) {
+  /** dontTouch: the "아무것도 하지마!" trap round — the game plays, but any touch loses and waiting it out wins. */
+  run(game, { level = 1, speed = 1, dontTouch = false } = {}) {
     // never let two games tick at once: a stale loop from a previous run is cancelled
     this._runId = (this._runId || 0) + 1;
     const runId = this._runId;
@@ -245,6 +247,8 @@ export class Stage {
       lerp: (a, b, t) => a + (b - a) * t,
     };
 
+    // trap round: the game's own verdicts are ignored; only a touch (lose) or the buzzer (win) decides
+    if (dontTouch) { G.win = () => {}; G.lose = () => {}; }
     const decide = (r) => {
       if (G.result) return;
       G.result = r;
@@ -260,8 +264,21 @@ export class Stage {
     this.box.classList.toggle('no3d', game.layer === '2d');
     this.count.style.opacity = 0;
     const cmdDur = game.boss ? 1.4 : Math.max(0.7, 1.0 / Math.sqrt(speed));
-    this.showCommand(game, cmdDur, level);
-    if (game.no) sound.play(`vo_${String(game.no).padStart(2, '0')}`, { vol: 0.9 });
+    this.showCommand(dontTouch ? { cmd: '아무것도 하지마!', hint: '' } : game, cmdDur, level);
+    if (dontTouch) sound.play('vo_dont', { vol: 1 });
+    else if (game.no) sound.play(`vo_${String(game.no).padStart(2, '0')}`, { vol: 0.9 });
+    const scareEl = this.box.querySelector('#scare');
+    this._trap = dontTouch ? () => {
+      lastSfxAt = performance.now();
+      decide('lose');
+      endAt = G.t + 1.7; // let the scare land
+      scareEl.classList.remove('on'); void scareEl.offsetWidth; scareEl.classList.add('on');
+      sound.stopMusic(0.05);
+      sound.play('scare', { vol: 1 });
+      sound.play('shared:jumpscare_sting', { vol: 1 });
+      setTimeout(() => sound.play('evil_laugh', { vol: 0.8, rate: 0.85 }), 380);
+      this.shake(26, 0.6);
+    } : null;
     if (game.bgm) sound.music(game.bgm, game.boss ? 1 : Math.min(1.7, speed), game.bgmVol ?? 0.45);
     else sound.stopMusic();
 
@@ -284,7 +301,9 @@ export class Stage {
         last = now;
         G.t += dt;
         G.left = Math.max(0, duration - G.t);
-        if (!G.result && G.t >= duration) {
+        if (!G.result && G.t >= duration && dontTouch) {
+          decide('win'); // kept their hands off — survived
+        } else if (!G.result && G.t >= duration) {
           decide(game.timeout || 'lose');
           const r = inst.timeout?.(G.result); // a game may judge at the buzzer by returning 'win' | 'lose'
           if (r === 'win' || r === 'lose') G.result = r;
@@ -331,6 +350,8 @@ export class Stage {
   }
 
   finish(inst, scene) {
+    this._trap = null;
+    this.box.querySelector('#scare')?.classList.remove('on');
     try { inst.dispose?.(); } catch (e) { console.error(e); }
     this.inst = null;
     this.sound.stopLoops();

@@ -183,6 +183,8 @@ export default {
     A.instance('gangnana_cute').then(({ root, clips }) => {
       fitHeight(root, 0.36);
       root.traverse((o) => { if (o.isMesh) o.material = toPS1(o.material); });
+      root.visible = state === 'win'; // only shown in the ending
+      nana.userData.root = root;
       nana.add(root);
       nanaAnim = G.animate(root, clips);
       nanaAnim.play('idle');
@@ -229,10 +231,14 @@ export default {
       G.lose();
     };
     const win = () => {
+      // the only way to win: every regular order served, Dongwoo is next in line
+      if (state !== 'play' || served < customers.length - 1 || customers[cur]?.style !== 'dongwoo') return;
       state = 'win'; stT = 0; printT = 0; step = 0;
       G.sfx('shared:printer_receipt', { vol: 0.8 });
       setTimeout(() => { G.sfx('shared:service_bell'); G.sfx('sparkle'); }, 350);
       nana.visible = true;
+      if (nana.userData.root) nana.userData.root.visible = true;
+      nana.scale.setScalar(0.01);
       pickPad.visible = true;
       nanaAnim?.play('cheer');
       G.win();
@@ -300,6 +306,7 @@ export default {
 
         const c = G.c2d;
         const cu = customer();
+        G.dbg.nanaShown = nana.visible && !!nana.userData.root?.visible; G.dbg.served = served;
         G.dbg.cur = cur; G.dbg.step = step; G.dbg.phase = phase; G.dbg.order = cu?.order; G.dbg.btn = btnOrder;
 
         // ---- HUD ----

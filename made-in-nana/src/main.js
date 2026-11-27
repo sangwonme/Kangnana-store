@@ -316,7 +316,9 @@ async function runLoop({ only = null } = {}) {
     world.stop();
     window.__min.state = 'game';
     window.__min.game = g.id;
-    const r = await stage.run(g, { level, speed });
+    // rare trap round (1/50): "아무것도 하지마!" — any touch loses.  TEMP: game 5 is always the trap, for testing
+    const dontTouch = !practice && !g.boss && (n === 5 || Math.random() < 1 / 50);
+    const r = await stage.run(g, { level, speed, dontTouch });
     window.__min.state = 'after';
     prev = r;
     const m = (micro[g.id] ??= { w: 0, p: 0 });

@@ -49,6 +49,13 @@ body {
   100% { opacity: 0; transform: scale(1.3) }
 }
 
+/* "아무것도 하지마!" trap: scary Gangnana rushes at the screen */
+#scare { position: absolute; inset: 0; z-index: 2; pointer-events: none; display: none;
+  background: #000 url(../assets/img/scare_nana.jpg) center / cover no-repeat; }
+#scare.on { display: block; animation: scare-in .55s cubic-bezier(.2,1.4,.3,1) both, scare-flicker .09s .55s infinite alternate; }
+@keyframes scare-in { 0% { transform: scale(.25) rotate(-8deg); opacity: 0; filter: brightness(3) } 35% { opacity: 1 }
+  100% { transform: scale(1.35) rotate(2deg); filter: brightness(1) contrast(1.3) } }
+@keyframes scare-flicker { from { transform: scale(1.35) translate(-3px, 2px) rotate(2deg) } to { transform: scale(1.42) translate(3px, -2px) rotate(1deg); filter: contrast(1.6) brightness(.85) } }
 #caption { font-family: 'ONE Mobile POP'; position: absolute; left: 0; right: 0; bottom: 11%; text-align: center; pointer-events: none;
   font-size: calc(var(--u) * 5.5); color: #fff; -webkit-text-stroke: calc(var(--u) * .55) #000; paint-order: stroke; opacity: 0; transition: opacity .15s; }
 #caption.on { opacity: 1; }
